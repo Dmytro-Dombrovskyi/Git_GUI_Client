@@ -14,11 +14,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        git_gui_client.cpp
+    gui_main_window.cpp
 
-HEADERS  += git_gui_client.h
+HEADERS  += \
+    gui_main_window.h
 
-FORMS    += git_gui_client.ui
+FORMS    += \
+    gui_main_window.ui
 
 RESOURCES += \
-    icons.qrc
+    Images.qrc

@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/copy.png</file>
+        <file>icons/deletered.png</file>
+        <file>icons/dialog_question.png</file>
+        <file>icons/document_save_as.png</file>
+        <file>icons/edit_paste.png</file>
+        <file>icons/find.png</file>
+        <file>icons/flash_disk.png</file>
+        <file>icons/folder_open3.png</file>
+        <file>icons/fresh_cut_wheatgrass.png</file>
+        <file>icons/get_info.png</file>
+        <file>icons/gnome_edit_delete.png</file>
+        <file>icons/new_edit_find_replace.png</file>
+    </qresource>
+</RCC>
