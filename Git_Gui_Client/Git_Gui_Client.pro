@@ -14,10 +14,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    gui_main_window.cpp
+    gui_main_window.cpp \
+    gitdata.cpp
 
 HEADERS  += \
-    gui_main_window.h
+    gui_main_window.h \
+    gitdata.h
 
 FORMS    += \
     gui_main_window.ui
