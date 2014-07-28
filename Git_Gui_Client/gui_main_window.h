@@ -19,11 +19,8 @@ public:
     explicit Gui_Main_Window(QWidget *parent = 0);
     ~Gui_Main_Window();
 
-private slots:    
-
+private slots:
     void on_actionExit_triggered();
-
-    void on_pushButton_Start_clicked();
 
     void on_actionOpen_triggered();
 
@@ -32,6 +29,8 @@ private:
     QProcess *Git;
     QStringListModel hash_model;
 
+    QStandardItemModel *my_item_model;
+    QStandardItem *parentItem;
 };
 
 #endif // GUI_MAIN_WINDOW_H

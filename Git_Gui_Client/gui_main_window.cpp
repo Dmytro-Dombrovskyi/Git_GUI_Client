@@ -13,6 +13,11 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     ui->setupUi(this);
 
     Git = new QProcess(this);
+    my_item_model = new  QStandardItemModel(this);
+
+    QStringList data_header;
+    data_header << "Date" << "Commiter e-mail" << "Message" << "Hash";
+    my_item_model->setHorizontalHeaderLabels(data_header);
 
 }
 
@@ -24,18 +29,6 @@ Gui_Main_Window::~Gui_Main_Window()
 void Gui_Main_Window::on_actionExit_triggered()
 {
     QApplication::instance()->quit();
-}
-
-void Gui_Main_Window::on_pushButton_Start_clicked()
-{
-//    QProcess Git;
-//    Git.start("git");
-//    Git.waitForReadyRead();
-//    qDebug() << Git.readAll();
-//    Git.write("git log");
-//    qDebug() << Git.readAll();
-//    Git.waitForFinished();
-
 }
 
 void Gui_Main_Window::on_actionOpen_triggered()
@@ -56,23 +49,53 @@ void Gui_Main_Window::on_actionOpen_triggered()
     #endif
 
         QStringList hash_list; // = "log --pretty=format:\"%h\"";
-        hash_list << "log" << "--pretty=format:\"%h\"";
+        hash_list << "log" << "--pretty=format:\"%ar :: %ce :: %s :: %h\"";
 
         Git->start(program_path, hash_list);
         Git->waitForFinished();
 
         QString data = Git->readAllStandardOutput();
         QString error = Git->readAllStandardError();
+        hash_list.clear();
 
         if(!error.isEmpty())
           QMessageBox::warning(this, "Warning", error);
 
-        QStringList hash;
+//        QStringList autor_name_from_hash;
+//        QStringList data_from_hash;
+
         if(!data.isEmpty())
         {
+            QStringList hash;
+            QStringList message_from_hash;
+
             hash = data.split("\n");
-            hash_model.setStringList(hash);
-            ui->tableView->setModel(&hash_model);
+            QVector<QStringList> message_data;
+
+            foreach(QString hash_data, hash)
+            {
+                message_from_hash = hash_data.split("::");
+                message_data.append(message_from_hash);
+                message_from_hash.clear();
+            }
+
+           unsigned int column_num = 0;
+           foreach(QStringList data_temp, message_data)
+           {
+               unsigned int row_num = 0;
+               foreach(QString temp_string, data_temp)
+                 {
+                   QStandardItem *item = new QStandardItem(temp_string);
+                   my_item_model->setItem(column_num, row_num, item);
+                   row_num++;
+                 }
+                column_num++;
+           }
+
+          ui->tableView->setModel(my_item_model);
+          ui->tableView->resizeColumnsToContents();
+          ui->tableView->resizeRowsToContents();
+
         }
     }
 }
