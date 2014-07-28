@@ -30,6 +30,7 @@ private slots:
 private:
     Ui::Gui_Main_Window *ui;
     QProcess *Git;
+    QStringListModel hash_model;
 
 };
 

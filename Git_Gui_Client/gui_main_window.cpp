@@ -28,13 +28,13 @@ void Gui_Main_Window::on_actionExit_triggered()
 
 void Gui_Main_Window::on_pushButton_Start_clicked()
 {
-    QProcess Git;
-    Git.start("git");
-    Git.waitForReadyRead();
-    qDebug() << Git.readAll();
-    Git.write("git log");
-    qDebug() << Git.readAll();
-    Git.waitForFinished();
+//    QProcess Git;
+//    Git.start("git");
+//    Git.waitForReadyRead();
+//    qDebug() << Git.readAll();
+//    Git.write("git log");
+//    qDebug() << Git.readAll();
+//    Git.waitForFinished();
 
 }
 
@@ -45,18 +45,34 @@ void Gui_Main_Window::on_actionOpen_triggered()
     if(!DirectoryName.isEmpty())
     {
         Git->setWorkingDirectory(DirectoryName);
-        QStringList arguments;
-        Git->start("git",arguments);
-        if(Git->waitForStarted()) return;
+        QString program_path;
 
-        QString message = Git->readAllStandardOutput();
-        QString error_message = Git->readAllStandardError();
+    #ifdef Q_OS_WIN
+        program_path = "C:\\Program Files (x86)\\Git\\bin\\git.exe";
+        //Git->setProgram("C:\\Program Files (x86)\\Git\\bin\\git.exe");
+    #else
+        program_path = "git";
+        //Git->setProgram("git");
+    #endif
 
-        if(!error_message.isEmpty())
-            QMessageBox::warning(this, "Warning", error_message);
-        if(!message.isEmpty())
-            ui->listWidget->insertItems(message.size(), message);
+        QStringList hash_list; // = "log --pretty=format:\"%h\"";
+        hash_list << "log" << "--pretty=format:\"%h\"";
 
+        Git->start(program_path, hash_list);
+        Git->waitForFinished();
+
+        QString data = Git->readAllStandardOutput();
+        QString error = Git->readAllStandardError();
+
+        if(!error.isEmpty())
+          QMessageBox::warning(this, "Warning", error);
+
+        QStringList hash;
+        if(!data.isEmpty())
+        {
+            hash = data.split("\n");
+            hash_model.setStringList(hash);
+            ui->tableView->setModel(&hash_model);
+        }
     }
-
 }
