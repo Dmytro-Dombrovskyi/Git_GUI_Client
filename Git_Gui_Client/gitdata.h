@@ -10,48 +10,52 @@ class GitData
 {
 public:
 
-    GitData( QString hash, QString autorName,
-             QString autorEmail, QString commiterEmail,
-             QString commitMessage, QString date,
-             QString datePeriod);
+    GitData(QString hash,
+             QString autorName = "",
+             QString autorEmail = "",
+             QString commiterEmail = "",
+             QString commiterName = "",
+             QString commitMessage = "",
+             QString date = "",
+             QString datePeriod = "");
 
     virtual ~GitData() {}
     QString get_hash()const;
     QString get_autorName()const;
     QString get_autorEmail()const;
     QString get_commiter_Email()const;
+    QString get_commiterName()const;
     QString get_commitMessage()const;
     QString get_date()const;
     QString get_datePeriod()const;
 
-    QVector<revision_files> get_revisionFiles()const;
+    //QVector<revision_files> get_revisionFiles()const;
 
 protected:
-    QVector<revision_files> revisionFiles_;
+    //QVector<revision_files> revisionFiles_;
 
-    void set_hash();
-    void set_autorName();
-    void set_autorEmail();
-    void set_commiterEmail();
-    void set_commitMessage();
-    void set_date();
-    void set_datePeriod();
+    void set_hash(QString hash);
+    void set_autorName(QString autorName);
+    void set_autorEmail(QString autorEmail);
+    void set_commiterEmail(QString commiterEmail);
+    void set_commiterName(QString commiterName);
+    void set_commitMessage(QString commitMessage);
+    void set_date(QString date);
+    void set_datePeriod(QString datePeriod);
 
-    void set_revisionFiles();
+    //void set_revisionFiles();
 private:
     QString hash_;
 
     QString autorName_;
     QString autorEmail_;
 
-    QString commiter_Email_;
-
+    QString commiterEmail_;
+    QString commiterName_;
     QString commitMessage_;
 
     QString date_;
     QString datePeriod_;
-
-    QVector<revision_files> revisionFiles_;
 
 };
 

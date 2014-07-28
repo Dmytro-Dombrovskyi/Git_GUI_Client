@@ -48,8 +48,8 @@ void Gui_Main_Window::on_actionOpen_triggered()
         //Git->setProgram("git");
     #endif
 
-        QStringList hash_list; // = "log --pretty=format:\"%h\"";
-        hash_list << "log" << "--pretty=format:\"%ar :: %ce :: %s :: %h\"";
+        QStringList hash_list;
+        hash_list << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %ci\"";
 
         Git->start(program_path, hash_list);
         Git->waitForFinished();

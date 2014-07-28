@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QDirModel>
 #include <QTreeView>
-
+#include "gitdata.h"
 
 namespace Ui {
 class Gui_Main_Window;
@@ -28,6 +28,8 @@ private:
     Ui::Gui_Main_Window *ui;
     QProcess *Git;
     QStringListModel hash_model;
+
+    QVector<GitData> myData;
 
     QStandardItemModel *my_item_model;
     QStandardItem *parentItem;
