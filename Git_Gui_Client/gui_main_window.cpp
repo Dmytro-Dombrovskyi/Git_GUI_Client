@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QString>
 
+
 Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Gui_Main_Window)
@@ -19,8 +20,9 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     data_header << "Date" << "Commiter e-mail" << "Message";
     my_item_model->setHorizontalHeaderLabels(data_header);
 
-    connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
+    ui->textBrowser->setReadOnly(true);
 
+    connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
 }
 
 Gui_Main_Window::~Gui_Main_Window()
@@ -51,7 +53,7 @@ void Gui_Main_Window::on_actionOpen_triggered()
     #endif
 
         QStringList hash_list;
-        hash_list << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %ci\"";
+        hash_list << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
 
         Git->start(program_path, hash_list);
         Git->waitForFinished();
@@ -59,6 +61,7 @@ void Gui_Main_Window::on_actionOpen_triggered()
         QString data = Git->readAllStandardOutput();
         QString error = Git->readAllStandardError();
         hash_list.clear();
+        Git->close();
 
         if(!error.isEmpty())
           qDebug() << error;
@@ -67,8 +70,6 @@ void Gui_Main_Window::on_actionOpen_triggered()
         if(!data.isEmpty())
         {
             QStringList hash;
-            QStringList message_from_hash;
-
             hash = data.split("\n");
 
             QVector<QStringList> initialItemsForGitData;
@@ -83,25 +84,39 @@ void Gui_Main_Window::on_actionOpen_triggered()
                   myData.append(new GitData(data_temp));
               }
 
-          for(int row = 0; row < myData.size(); ++row)
-            {
-              //int col = 0;
-              QStandardItem *item_datePeriod =
-                  new QStandardItem(myData.at(row)->get_datePeriod());
-              QStandardItem *item_commiterEmail=
-                  new QStandardItem(myData.at(row)->get_commiter_Email());
-              QStandardItem *item_message =
-                  new QStandardItem(myData.at(row)->get_commitMessage());
+            for(int row = 0; row < myData.size(); ++row)
+              {
+                //int col = 0;
+                QStandardItem *item_datePeriod =
+                    new QStandardItem(myData.at(row)->get_datePeriod());
+                QStandardItem *item_commiterEmail=
+                    new QStandardItem(myData.at(row)->get_commiter_Email());
+                QStandardItem *item_message =
+                    new QStandardItem(myData.at(row)->get_commitMessage());
 
-              my_item_model->setItem(row, 0, item_datePeriod);
-              my_item_model->setItem(row, 1, item_commiterEmail);
-              my_item_model->setItem(row, 2, item_message);
-            }
+                my_item_model->setItem(row, 0, item_datePeriod);
+                my_item_model->setItem(row, 1, item_commiterEmail);
+                my_item_model->setItem(row, 2, item_message);
+
+              }
 
           ui->tableView->setModel(my_item_model);
           ui->tableView->resizeColumnsToContents();
           ui->tableView->resizeRowsToContents();
+          //ui->tableView->setSelectionModel(ui->tableView_Files->selectionModel());
+          //ui->tableView->setShowGrid(false);
+
+          //ui->tableView->setT
+
+
+         // ui->textBrowser->setText(myData.at(0)->get_commitMessage());
 
         }
+
     }
 }
+
+//void Gui_Main_Window::textBrowser_update(int position)
+//{
+//   ui->textBrowser->setText(myData.at(position)->get_hash());
+//}

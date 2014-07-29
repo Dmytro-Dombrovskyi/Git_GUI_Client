@@ -18,11 +18,15 @@ class Gui_Main_Window : public QMainWindow
 public:
     explicit Gui_Main_Window(QWidget *parent = 0);
     ~Gui_Main_Window();
+signals:
+
 
 private slots:
     void on_actionExit_triggered();
 
     void on_actionOpen_triggered();
+
+//    void textBrowser_update(int position);
 
 private:
     Ui::Gui_Main_Window *ui;
@@ -32,6 +36,9 @@ private:
     QVector<GitData*> myData;
 
     QStandardItemModel *my_item_model;
+
+    QStandardItemModel *my_text_model;
+
     QStandardItem *parentItem;
 };
 
