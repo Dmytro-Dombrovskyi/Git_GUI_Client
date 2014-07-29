@@ -61,11 +61,16 @@ void Gui_Main_Window::on_actionOpen_triggered()
         QString data = Git->readAllStandardOutput();
         QString error = Git->readAllStandardError();
         hash_list.clear();
-        Git->close();
+        //Git->close();
 
         if(!error.isEmpty())
-          qDebug() << error;
+        {
+            qDebug() << error;
+            error.clear();
+        }
+
           //QMessageBox::warning(this, "Warning", error);
+
 
         if(!data.isEmpty())
         {
@@ -112,6 +117,26 @@ void Gui_Main_Window::on_actionOpen_triggered()
          // ui->textBrowser->setText(myData.at(0)->get_commitMessage());
 
         }
+        data.clear();
+        Git->start(program_path,QStringList() << "diff" << "--name-status" << "ca89");
+        //Git->start(program_path, QStringList() << "log" << "--oneline");
+        Git->waitForFinished();
+
+        data = Git->readAllStandardOutput();
+        error = Git->readAllStandardError();
+        Git->close();
+        if(!error.isEmpty())
+        {
+            qDebug() << error;
+            error.clear();
+        }
+        if(!data.isEmpty())
+        {
+          QStringList temp;
+          temp = data.split("\n");
+          QMessageBox::information(this, "info", data);
+        }
+
 
     }
 }
