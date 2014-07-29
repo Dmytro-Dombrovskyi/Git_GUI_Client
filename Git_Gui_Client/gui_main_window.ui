@@ -19,7 +19,20 @@
      <widget class="QTableView" name="tableView"/>
     </item>
     <item>
+     <widget class="QTextBrowser" name="textBrowser"/>
+    </item>
+    <item>
+     <widget class="QTableView" name="tableView_Files"/>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="OpenButton">
+        <property name="text">
+         <string>Open</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -34,9 +47,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="OkButton">
+       <widget class="QPushButton" name="ExitButton">
         <property name="text">
-         <string>Ok</string>
+         <string>Exit</string>
         </property>
        </widget>
       </item>
@@ -113,7 +126,7 @@
  </resources>
  <connections>
   <connection>
-   <sender>OkButton</sender>
+   <sender>ExitButton</sender>
    <signal>clicked()</signal>
    <receiver>Gui_Main_Window</receiver>
    <slot>close()</slot>

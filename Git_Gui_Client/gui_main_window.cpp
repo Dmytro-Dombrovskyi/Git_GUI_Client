@@ -19,6 +19,8 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     data_header << "Date" << "Commiter e-mail" << "Message";
     my_item_model->setHorizontalHeaderLabels(data_header);
 
+    connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
+
 }
 
 Gui_Main_Window::~Gui_Main_Window()
@@ -61,7 +63,7 @@ void Gui_Main_Window::on_actionOpen_triggered()
         if(!error.isEmpty())
           qDebug() << error;
           //QMessageBox::warning(this, "Warning", error);
-//
+
         if(!data.isEmpty())
         {
             QStringList hash;
@@ -69,25 +71,10 @@ void Gui_Main_Window::on_actionOpen_triggered()
 
             hash = data.split("\n");
 
-//            QVector<QStringList> initialItemsForGitData;
-//            foreach(QString current_string, initialData)
-//              {
-//                initialItemsForGitData.append(QStringList(current_string.split("::"));
-//              }
-
-
-
-
-           //QVector<QStringList> message_data;
             QVector<QStringList> initialItemsForGitData;
-
 
             foreach(QString hash_data, hash)
               {
-          //      message_from_hash = hash_data.split("::");
-          //      message_data.append(message_from_hash);
-           //     message_from_hash.clear();
-                //message_data.append(QStringList() << hash_data.split("::"));
                 initialItemsForGitData.append(QStringList() << hash_data.split("::"));
               }
             //myData.resize(initialItemsForGitData.size());
@@ -96,18 +83,6 @@ void Gui_Main_Window::on_actionOpen_triggered()
                   myData.append(new GitData(data_temp));
               }
 
-//           unsigned int column_num = 0;
-//           foreach(QStringList data_temp, message_data)
-//           {
-//               unsigned int row_num = 0;
-//               foreach(QString temp_string, data_temp)
-//                 {
-//                   QStandardItem *item = new QStandardItem(temp_string);
-//                   my_item_model->setItem(column_num, row_num, item);
-//                   row_num++;
-//                 }
-//                column_num++;
-//           }
           for(int row = 0; row < myData.size(); ++row)
             {
               //int col = 0;
