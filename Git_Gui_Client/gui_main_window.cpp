@@ -16,7 +16,7 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     my_item_model = new  QStandardItemModel(this);
 
     QStringList data_header;
-    data_header << "Date" << "Commiter e-mail" << "Message" << "Hash";
+    data_header << "Date" << "Commiter e-mail" << "Message";
     my_item_model->setHorizontalHeaderLabels(data_header);
 
 }
@@ -59,38 +59,69 @@ void Gui_Main_Window::on_actionOpen_triggered()
         hash_list.clear();
 
         if(!error.isEmpty())
-          QMessageBox::warning(this, "Warning", error);
-
-//        QStringList autor_name_from_hash;
-//        QStringList data_from_hash;
-
+          qDebug() << error;
+          //QMessageBox::warning(this, "Warning", error);
+//
         if(!data.isEmpty())
         {
             QStringList hash;
             QStringList message_from_hash;
 
             hash = data.split("\n");
-            QVector<QStringList> message_data;
+
+//            QVector<QStringList> initialItemsForGitData;
+//            foreach(QString current_string, initialData)
+//              {
+//                initialItemsForGitData.append(QStringList(current_string.split("::"));
+//              }
+
+
+
+
+           //QVector<QStringList> message_data;
+            QVector<QStringList> initialItemsForGitData;
+
 
             foreach(QString hash_data, hash)
-            {
-                message_from_hash = hash_data.split("::");
-                message_data.append(message_from_hash);
-                message_from_hash.clear();
-            }
+              {
+          //      message_from_hash = hash_data.split("::");
+          //      message_data.append(message_from_hash);
+           //     message_from_hash.clear();
+                //message_data.append(QStringList() << hash_data.split("::"));
+                initialItemsForGitData.append(QStringList() << hash_data.split("::"));
+              }
+            //myData.resize(initialItemsForGitData.size());
+            foreach(QStringList data_temp, initialItemsForGitData)
+              {
+                  myData.append(new GitData(data_temp));
+              }
 
-           unsigned int column_num = 0;
-           foreach(QStringList data_temp, message_data)
-           {
-               unsigned int row_num = 0;
-               foreach(QString temp_string, data_temp)
-                 {
-                   QStandardItem *item = new QStandardItem(temp_string);
-                   my_item_model->setItem(column_num, row_num, item);
-                   row_num++;
-                 }
-                column_num++;
-           }
+//           unsigned int column_num = 0;
+//           foreach(QStringList data_temp, message_data)
+//           {
+//               unsigned int row_num = 0;
+//               foreach(QString temp_string, data_temp)
+//                 {
+//                   QStandardItem *item = new QStandardItem(temp_string);
+//                   my_item_model->setItem(column_num, row_num, item);
+//                   row_num++;
+//                 }
+//                column_num++;
+//           }
+          for(int row = 0; row < myData.size(); ++row)
+            {
+              //int col = 0;
+              QStandardItem *item_datePeriod =
+                  new QStandardItem(myData.at(row)->get_datePeriod());
+              QStandardItem *item_commiterEmail=
+                  new QStandardItem(myData.at(row)->get_commiter_Email());
+              QStandardItem *item_message =
+                  new QStandardItem(myData.at(row)->get_commitMessage());
+
+              my_item_model->setItem(row, 0, item_datePeriod);
+              my_item_model->setItem(row, 1, item_commiterEmail);
+              my_item_model->setItem(row, 2, item_message);
+            }
 
           ui->tableView->setModel(my_item_model);
           ui->tableView->resizeColumnsToContents();

@@ -29,7 +29,7 @@ private:
     QProcess *Git;
     QStringListModel hash_model;
 
-    QVector<GitData> myData;
+    QVector<GitData*> myData;
 
     QStandardItemModel *my_item_model;
     QStandardItem *parentItem;

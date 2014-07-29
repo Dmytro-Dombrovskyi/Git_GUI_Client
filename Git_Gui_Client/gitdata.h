@@ -18,7 +18,7 @@ public:
              QString commitMessage = "",
              QString date = "",
              QString datePeriod = "");
-
+    explicit GitData(const QStringList &initialData);
     virtual ~GitData() {}
     QString get_hash()const;
     QString get_autorName()const;
@@ -43,6 +43,7 @@ protected:
     void set_date(QString date);
     void set_datePeriod(QString datePeriod);
 
+    void GitDataInit(const unsigned int number, const QString &initialString);
     //void set_revisionFiles();
 private:
     QString hash_;
