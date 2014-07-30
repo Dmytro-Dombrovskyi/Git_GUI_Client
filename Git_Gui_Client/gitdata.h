@@ -5,21 +5,10 @@
 #include <QtCore>
 
 struct revision_files;
-
+// class store data
 class GitData
 {
 public:
-
-    GitData(QString hash,
-             QString autorName = "",
-             QString autorEmail = "",
-             QString commiterEmail = "",
-             QString commiterName = "",
-             QString commitMessage = "",
-             QString date = "",
-             QString datePeriod = "" /*,
-             QString filesAction = ""*/ );
-
     explicit GitData(const QStringList &initialData);
     virtual ~GitData() {}
     QString get_hash()const;
@@ -33,9 +22,15 @@ public:
 //    QString get_fileAction()const;
 
     //QVector<revision_files> get_revisionFiles()const;
+    void set_revisionFiles(QString files);
 
+
+    QVector<revision_files*> revisionFiles_;
+
+    QStandardItemModel *file_changes_model;
 protected:
     //QVector<revision_files> revisionFiles_;
+
 
     void set_hash(QString hash);
     void set_autorName(QString autorName);
@@ -48,25 +43,23 @@ protected:
 //    void set_filesAction_(QString fileAction);
 
     void GitDataInit(const unsigned int number, const QString &initialString);
-    void set_revisionFiles();
+    void set_file_changes_model();
 private:
     QString hash_;
-
     QString autorName_;
     QString autorEmail_;
-
     QString commiterEmail_;
     QString commiterName_;
     QString commitMessage_;
-
     QString date_;
     QString datePeriod_;
 
-//    QString filesAction_;
 
-    QVector<revision_files> revisionFiles_;
+//    QString filesAction_;
 };
 
+
+// class which contain data in Format: File - Action
 class revision_files
 {
 private:
@@ -75,10 +68,16 @@ private:
 protected:
 
 public:
-    revision_files(const QString initFileAction,
-                   const QString initfileName) :
-                    fileAction_(initFileAction),
-                    fileName_(initfileName) {  }
+    revision_files(QString line)
+    {
+      QStringList items = line.split("\t");
+      if(items.size() == 2)
+        {
+          fileAction_ = items.at(0);
+          fileName_ = items.at(1);
+        }
+    }
+
     virtual ~revision_files() {}
 
     QString get_fileAction()const  {return fileAction_;}

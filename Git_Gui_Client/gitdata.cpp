@@ -1,29 +1,9 @@
 #include "gitdata.h"
 
-GitData::GitData(QString hash,
-                 QString autorName,
-                 QString autorEmail,
-                 QString commiterEmail,
-                 QString commiterName,
-                 QString commitMessage,
-                 QString date,
-                 QString datePeriod,
-                 QString filesAction) :
-    hash_(hash), //1
-    autorName_(autorName), //2
-    autorEmail_(autorEmail), //3
-    commiterEmail_(commiterEmail), //4
-    commiterName_(commiterName), //5
-    commitMessage_(commitMessage), //6
-    date_(date), //7
-    datePeriod_(datePeriod) //8
-//    filesAction_(filesAction) //9
+// constructor
+GitData::GitData(const QStringList &initialData)
 {
 
-}
-// constructor
-GitData::GitData(const QStringList &initialData/*, const QStringList &initialFilesAction*/)
-{
   if(!(initialData.isEmpty()))
     {
       unsigned int counter = 1;
@@ -34,6 +14,8 @@ GitData::GitData(const QStringList &initialData/*, const QStringList &initialFil
           ++counter;
         }
     }
+  file_changes_model = new QItemSelectionModel(this);
+  set_file_changes_model();
 }
 
 void GitData::GitDataInit(const unsigned int number, const QString &initialString)
@@ -71,9 +53,13 @@ void GitData::GitDataInit(const unsigned int number, const QString &initialStrin
     return;
     }
 }
-void GitData::set_revisionFiles()
+void GitData::set_revisionFiles(QString files)
 {
-
+    QStringList strings = files.split("\n");
+    foreach(QString current, strings)
+      {
+        revisionFiles_.append(new revision_files(current));
+      }
 }
 
 // get methods
@@ -111,10 +97,10 @@ QString GitData::get_datePeriod()const
 {
     return datePeriod_;
 }
-QString GitData::get_fileAction()const
-{
-  return filesAction_;
-}
+//QString GitData::get_fileAction()const
+//{
+//  return filesAction_;
+//}
 
 // set methods
 void GitData::set_hash(QString hash)
@@ -164,8 +150,25 @@ void GitData::set_datePeriod(QString datePeriod)
     if(datePeriod.isEmpty() || datePeriod_ == datePeriod) return;
     datePeriod_ = datePeriod;
 }
-void GitData::set_filesAction_(QString fileAction)
+//void GitData::set_filesAction_(QString fileAction)
+//{
+//  if(fileAction.isEmpty() || fileAction == filesAction_) return;
+//  filesAction_ = fileAction;
+//}
+
+void GitData::set_file_changes_model()
 {
-  if(fileAction.isEmpty() || fileAction == filesAction_) return;
-  filesAction_ = fileAction;
+    for(int row = 0; row < revisionFiles_.size(); ++row)
+    {
+        QStandardItem *item_FileName =
+            new QStandardItem(revisionFiles_.at(row)->get_fileName());
+        QStandardItem *item_message =
+            new QStandardItem(revisionFiles_.at(row)->get_fileAction());
+
+        file_changes_model->setItem(row, 0, item_FileName);
+        file_changes_model->setItem(row, 1, item_message);
+    }
+    file_changes_model->setHorizontalHeaderLabels(QStringList()
+                                             << "File name"
+                                             << "Status");
 }

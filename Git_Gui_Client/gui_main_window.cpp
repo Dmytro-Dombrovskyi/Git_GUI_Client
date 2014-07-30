@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QString>
 
-
+// constructor
 Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Gui_Main_Window)
@@ -15,17 +15,16 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 
     Git = new QProcess(this);
     my_item_model = new  QStandardItemModel(this);
-    my_item_file_changes_model = new QStandardItemModel(this);
+    //my_item_file_changes_model = new QStandardItemModel(this);
 
     ui->textBrowser->setReadOnly(true);
-
-
 
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
 }
 
 Gui_Main_Window::~Gui_Main_Window()
 {
+    Git->close();
     delete ui;
 }
 
@@ -39,7 +38,7 @@ void Gui_Main_Window::on_actionOpen_triggered()
     if(set_workingDirectory())
     {
         start_programm();
-    }
+    }    
 }
 
 bool Gui_Main_Window::set_workingDirectory()
@@ -80,42 +79,17 @@ void Gui_Main_Window::start_programm()
 
       if(!data2.isEmpty())
         {
-
+           QStringList temp = data2.split("\n\n");
+           int count =  0;
+           foreach(QString doubleString, temp)
+             {
+               myData.at(count)->set_revisionFiles(doubleString);
+             }
         }
-      data2.clear();
+      data2.clear();      
     }
-//      data = start_process(QStringList() << "log" << "--pretty=format:" << "--name-status");
-//      if(!data.isEmpty())
-//        {
-//          QStringList temp = data.split("\n\n");
-
-//          foreach(QString string, temp)
-//            {
-//              updatingFiles.append(new revision_files(string));
-//            }
-
-
-////          set_revision_filesClass();
-////          set_myItemTableView_model_2();
-////          update_TableView_2();
-
-//          QVector<QString> data_col_1 = updatingFiles.at(0)->get_fileName();
-//          QVector<QString> data_col_2 = updatingFiles.at(0)->get_fileName();
-
-//          for(int row = 0; row < data_col_1.size(); ++row)            {
-
-//              QStandardItem *item_fileName = new QStandardItem(data_col_1.at(row));
-//              QStandardItem *item_fileAction = new QStandardItem(data_col_2.at(row));
-
-//              my_item_file_changes_model->setItem(row, 0, item_fileName);
-//              my_item_file_changes_model->setItem(row, 1, item_fileAction);
-//            }
-//          my_item_file_changes_model->setHorizontalHeaderLabels(QStringList()
-//                                                                << "File name"
-//                                                                << "Status");
-//        }
-//  }
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::set_programPath()
 {
@@ -161,37 +135,7 @@ void Gui_Main_Window::set_myDataClass(const QVector<QStringList> &data)
         myData.append(new GitData(data.at(i)));
     }
 }
-
-//void Gui_Main_Window::set_revision_filesClass()
-//{
-//  foreach(QStringList data_temp, initialItemsForGitData_)
-//    {
-//        updatingFiles.append(new revision_files(data_temp));
-//    }
-//}
-
-//void Gui_Main_Window::set_myItemTableView_model_2()
-//{
-//    for(int row = 0; row < updatingFiles.size(); ++row)
-//      {
-//        QStandardItem *item_fileName = new QStandardItem(updatingFiles.at(row)->get_fileName());
-//        QStandardItem *item_fileAction = new QStandardItem(updatingFiles.at(row)->get_fileAction());
-
-//        my_item_file_changes_model->setItem(row, 0, item_fileName);
-//        my_item_file_changes_model->setItem(row, 1, item_fileAction);
-//      }
-//    my_item_file_changes_model->setHorizontalHeaderLabels(QStringList()
-//                                                          << "File name"
-//                                                          << "Status");
-//}
-
-void Gui_Main_Window::update_TableView_2()
-{
-  ui->tableView_Files->setModel(my_item_file_changes_model);
-  ui->tableView_Files->resizeColumnsToContents();
-  ui->tableView_Files->resizeRowsToContents();
-}
-
+// set model 1
 void Gui_Main_Window::set_myItemTableView_model_1()
 {
     for(int row = 0; row < myData.size(); ++row)
@@ -212,11 +156,18 @@ void Gui_Main_Window::set_myItemTableView_model_1()
                                              << "Commiter e-mail"
                                              << "Message");
 }
-
+// set model to table view 1.
 void Gui_Main_Window::update_TableView_1()
 {
   ui->tableView->setModel(my_item_model);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
+}
+// set model to table view 2.
+void Gui_Main_Window::update_TableView_2()
+{
+  ui->tableView_Files->setModel(myData.at(0)->file_changes_model);
+  ui->tableView_Files->resizeColumnsToContents();
+  ui->tableView_Files->resizeRowsToContents();
 }
 

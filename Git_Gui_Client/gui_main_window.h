@@ -41,8 +41,7 @@ protected:
     void update_TableView_1();
     void start_programm();
 
-    void set_revision_filesClass();
-    void set_myItemTableView_model_2();
+
     void update_TableView_2();
 private:
     Ui::Gui_Main_Window *ui;
@@ -52,10 +51,9 @@ private:
     QVector<GitData*> myData; //class for TableView_1;
     QVector<revision_files*> updatingFiles; //class for TableView_2;
 
-    QStandardItemModel *my_item_model;
-    QStandardItemModel *my_item_file_changes_model;
+    QStandardItemModel *my_item_model;    
 
-    QStandardItemModel *my_text_model;
+    //QStandardItemModel *my_text_model;
     QStandardItem *parentItem;
 
     QString workingDirectory_;
