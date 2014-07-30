@@ -60,11 +60,19 @@ private:
 
 };
 
-struct revision_files
+class revision_files
 {
-    QString file_path_;
-    QString file_status_;
-    QString file_lines_added_;
-    QString file_lines_removed_;
+private:
+    QString fileAction_;
+    QString fileName_;
+protected:
+    void dataInit(const unsigned int number, const QString &initString);
+public:
+    revision_files(const QStringList &initData);
+
+    virtual ~revision_files() {}
+
+    QString get_fileAction()const  {return fileAction_;}
+    QString get_fileName()const    {return fileName_;}
 };
 #endif // GITDATA_H

@@ -33,6 +33,38 @@ GitData::GitData(const QStringList &initialData)
         }
     }
 }
+
+revision_files::revision_files(const QStringList &initData)
+{
+  if(!(initData.isEmpty()))
+    {
+      unsigned int counter = 1;
+      foreach (QString initialItem, initData )
+        {
+          if(!(initialItem.isEmpty()))
+            {
+              dataInit(counter, initialItem);
+            }
+          ++counter;
+        }
+    }
+}
+
+void revision_files::dataInit(const unsigned int number, const QString &initString)
+{
+  switch(number)
+    {
+    case 1:
+      fileAction_ = initString;
+      break;
+    case 2:
+      fileName_ = initString;
+      break;
+    default:
+      qDebug() << "Fail Data init!";
+    }
+}
+
 void GitData::GitDataInit(const unsigned int number, const QString &initialString)
 {
   switch(number)
