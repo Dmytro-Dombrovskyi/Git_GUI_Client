@@ -17,7 +17,9 @@ public:
              QString commiterName = "",
              QString commitMessage = "",
              QString date = "",
-             QString datePeriod = "");
+             QString datePeriod = "" /*,
+             QString filesAction = ""*/ );
+
     explicit GitData(const QStringList &initialData);
     virtual ~GitData() {}
     QString get_hash()const;
@@ -28,6 +30,7 @@ public:
     QString get_commitMessage()const;
     QString get_date()const;
     QString get_datePeriod()const;
+//    QString get_fileAction()const;
 
     //QVector<revision_files> get_revisionFiles()const;
 
@@ -42,9 +45,10 @@ protected:
     void set_commitMessage(QString commitMessage);
     void set_date(QString date);
     void set_datePeriod(QString datePeriod);
+//    void set_filesAction_(QString fileAction);
 
     void GitDataInit(const unsigned int number, const QString &initialString);
-    //void set_revisionFiles();
+    void set_revisionFiles();
 private:
     QString hash_;
 
@@ -58,6 +62,9 @@ private:
     QString date_;
     QString datePeriod_;
 
+//    QString filesAction_;
+
+    QVector<revision_files> revisionFiles_;
 };
 
 class revision_files
@@ -66,13 +73,16 @@ private:
     QString fileAction_;
     QString fileName_;
 protected:
-    void dataInit(const unsigned int number, const QString &initString);
-public:
-    revision_files(const QStringList &initData);
 
+public:
+    revision_files(const QString initFileAction,
+                   const QString initfileName) :
+                    fileAction_(initFileAction),
+                    fileName_(initfileName) {  }
     virtual ~revision_files() {}
 
     QString get_fileAction()const  {return fileAction_;}
     QString get_fileName()const    {return fileName_;}
 };
+
 #endif // GITDATA_H

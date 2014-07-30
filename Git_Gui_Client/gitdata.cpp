@@ -1,5 +1,5 @@
 #include "gitdata.h"
-//hash_list << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
+
 GitData::GitData(QString hash,
                  QString autorName,
                  QString autorEmail,
@@ -7,7 +7,8 @@ GitData::GitData(QString hash,
                  QString commiterName,
                  QString commitMessage,
                  QString date,
-                 QString datePeriod) :
+                 QString datePeriod,
+                 QString filesAction) :
     hash_(hash), //1
     autorName_(autorName), //2
     autorEmail_(autorEmail), //3
@@ -16,11 +17,12 @@ GitData::GitData(QString hash,
     commitMessage_(commitMessage), //6
     date_(date), //7
     datePeriod_(datePeriod) //8
+//    filesAction_(filesAction) //9
 {
 
 }
 // constructor
-GitData::GitData(const QStringList &initialData)
+GitData::GitData(const QStringList &initialData/*, const QStringList &initialFilesAction*/)
 {
   if(!(initialData.isEmpty()))
     {
@@ -31,37 +33,6 @@ GitData::GitData(const QStringList &initialData)
               GitDataInit(counter, initialItem);
           ++counter;
         }
-    }
-}
-
-revision_files::revision_files(const QStringList &initData)
-{
-  if(!(initData.isEmpty()))
-    {
-      unsigned int counter = 1;
-      foreach (QString initialItem, initData )
-        {
-          if(!(initialItem.isEmpty()))
-            {
-              dataInit(counter, initialItem);
-            }
-          ++counter;
-        }
-    }
-}
-
-void revision_files::dataInit(const unsigned int number, const QString &initString)
-{
-  switch(number)
-    {
-    case 1:
-      fileAction_ = initString;
-      break;
-    case 2:
-      fileName_ = initString;
-      break;
-    default:
-      qDebug() << "Fail Data init!";
     }
 }
 
@@ -93,10 +64,16 @@ void GitData::GitDataInit(const unsigned int number, const QString &initialStrin
     case 8:
       datePeriod_ = initialString;
     break;
+//    case 9:
+//      filesAction_ = initialString;
   default:
     qDebug() << "Initial error";
     return;
     }
+}
+void GitData::set_revisionFiles()
+{
+
 }
 
 // get methods
@@ -133,6 +110,10 @@ QString GitData::get_date()const
 QString GitData::get_datePeriod()const
 {
     return datePeriod_;
+}
+QString GitData::get_fileAction()const
+{
+  return filesAction_;
 }
 
 // set methods
@@ -182,4 +163,9 @@ void GitData::set_datePeriod(QString datePeriod)
 {
     if(datePeriod.isEmpty() || datePeriod_ == datePeriod) return;
     datePeriod_ = datePeriod;
+}
+void GitData::set_filesAction_(QString fileAction)
+{
+  if(fileAction.isEmpty() || fileAction == filesAction_) return;
+  filesAction_ = fileAction;
 }
