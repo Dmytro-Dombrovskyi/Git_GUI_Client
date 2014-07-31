@@ -1,5 +1,6 @@
 #include "gui_main_window.h"
 #include "ui_gui_main_window.h"
+
 #include <QProcess>
 #include <QDebug>
 #include <QFileDialog>
@@ -12,13 +13,8 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     ui(new Ui::Gui_Main_Window)
 {
     ui->setupUi(this);
-
-    Git = new QProcess(this);
-    my_item_model = new  QStandardItemModel(this);
-    //my_item_file_changes_model = new QStandardItemModel(this);
-
+    Git = new QProcess(this); 
     ui->textBrowser->setReadOnly(true);
-
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
 }
 
@@ -55,7 +51,7 @@ void Gui_Main_Window::start_programm()
 {
   if(!(get_workingDirectory().isEmpty()))
   {
-      set_programPath(); // set default programm execution file(git.exe or "git")
+      set_programPath(); // set default programm execution file(git.exe for windows or "git" for linux)
 
       QStringList command;
       command << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
@@ -70,8 +66,7 @@ void Gui_Main_Window::start_programm()
       {
          QVector<QStringList> initialItemsForGitData = processing_data(data1);
 
-          set_myDataClass(initialItemsForGitData);
-          set_myItemTableView_model_1();
+          set_myDataClass(initialItemsForGitData);         
           update_TableView_1();
       }
       command.clear();
@@ -135,39 +130,13 @@ void Gui_Main_Window::set_myDataClass(const QVector<QStringList> &data)
         myData.append(new GitData(data.at(i)));
     }
 }
-// set model 1
-void Gui_Main_Window::set_myItemTableView_model_1()
-{
-    for(int row = 0; row < myData.size(); ++row)
-    {
-        QStandardItem *item_datePeriod =
-            new QStandardItem(myData.at(row)->get_datePeriod());
-        QStandardItem *item_commiterEmail=
-            new QStandardItem(myData.at(row)->get_commiter_Email());
-        QStandardItem *item_message =
-            new QStandardItem(myData.at(row)->get_commitMessage());
 
-        my_item_model->setItem(row, 0, item_datePeriod);
-        my_item_model->setItem(row, 1, item_commiterEmail);
-        my_item_model->setItem(row, 2, item_message);
-    }
-    my_item_model->setHorizontalHeaderLabels(QStringList()
-                                             << "Date"
-                                             << "Commiter e-mail"
-                                             << "Message");
-}
-// set model to table view 1.
+// set my model with data to table view 1.
 void Gui_Main_Window::update_TableView_1()
 {
-  ui->tableView->setModel(my_item_model);
+  mainModel = new My_Data_Model(myData, this);
+
+  ui->tableView->setModel(mainModel);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
 }
-// set model to table view 2.
-void Gui_Main_Window::update_TableView_2()
-{
-  ui->tableView_Files->setModel(myData.at(0)->file_changes_model);
-  ui->tableView_Files->resizeColumnsToContents();
-  ui->tableView_Files->resizeRowsToContents();
-}
-

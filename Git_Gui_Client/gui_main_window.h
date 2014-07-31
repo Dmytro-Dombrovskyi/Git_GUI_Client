@@ -6,6 +6,7 @@
 #include <QDirModel>
 #include <QTreeView>
 #include "gitdata.h"
+#include "my_data_model.h"
 
 namespace Ui {
 class Gui_Main_Window;
@@ -22,39 +23,29 @@ signals:
 
 private slots:
     void on_actionExit_triggered();
-
     void on_actionOpen_triggered();
 
-//    void textBrowser_update(int position);
 protected:
-    QString load_data();
+    void set_programPath(); // set default programm execution file(git.exe for windows or "git" for linux)
     bool set_workingDirectory();
     QString get_workingDirectory() const {return workingDirectory_;}
-    QString start_process(const QStringList & command);
-    void set_programPath();
+    QString start_process(const QStringList & command); // start Git process and read output
+
     QString get_programPath() const {return programPath_;}
     QVector<QStringList> processing_data(const QString &data,
                          const QString splitter_1 = "\n",
                          const QString splitter_2 = "::");
-    void set_myDataClass(const QVector<QStringList> &data);
-    void set_myItemTableView_model_1();
+
+    void set_myDataClass(const QVector<QStringList> &data);   
     void update_TableView_1();
     void start_programm();
 
-
-    void update_TableView_2();
 private:
     Ui::Gui_Main_Window *ui;
     QProcess *Git;
-    QStringListModel hash_model;
-
     QVector<GitData*> myData; //class for TableView_1;
-    QVector<revision_files*> updatingFiles; //class for TableView_2;
 
-    QStandardItemModel *my_item_model;    
-
-    //QStandardItemModel *my_text_model;
-    QStandardItem *parentItem;
+    My_Data_Model * mainModel;
 
     QString workingDirectory_;
     QString programPath_;

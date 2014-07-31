@@ -12,5 +12,8 @@
         <file>icons/get_info.png</file>
         <file>icons/gnome_edit_delete.png</file>
         <file>icons/new_edit_find_replace.png</file>
+        <file>icons/gitIcon.png</file>
+        <file>icons/gitIconSmall.png</file>
+        <file>icons/deleteredSmall.png</file>
     </qresource>
 </RCC>

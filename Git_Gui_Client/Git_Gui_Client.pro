@@ -15,14 +15,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     gui_main_window.cpp \
-    gitdata.cpp
+    gitdata.cpp \
+    my_data_model.cpp
 
 HEADERS  += \
     gui_main_window.h \
-    gitdata.h
+    gitdata.h \
+    my_data_model.h
 
 FORMS    += \
     gui_main_window.ui
 
 RESOURCES += \
     Images.qrc
+
+OTHER_FILES +=
