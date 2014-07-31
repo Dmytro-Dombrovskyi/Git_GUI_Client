@@ -14,8 +14,8 @@ GitData::GitData(const QStringList &initialData)
           ++counter;
         }
     }
-  file_changes_model = new QItemSelectionModel(this);
-  set_file_changes_model();
+  //file_changes_model = new QItemSelectionModel(this);
+  //set_file_changes_model();
 }
 
 void GitData::GitDataInit(const unsigned int number, const QString &initialString)
