@@ -7,6 +7,7 @@
 #include <QTreeView>
 #include "gitdata.h"
 #include "my_data_model.h"
+//#include <>
 
 namespace Ui {
 class Gui_Main_Window;
@@ -46,6 +47,9 @@ private:
     QVector<GitData*> myData; //class for TableView_1;
 
     My_Data_Model * mainModel;
+    QSortFilterProxyModel *FilterForTable_Model_1;
+
+ //   SingleItemView;
 
     QString workingDirectory_;
     QString programPath_;

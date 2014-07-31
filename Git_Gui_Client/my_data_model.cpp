@@ -1,4 +1,5 @@
 #include "my_data_model.h"
+#include "gitdata.h"
 
 My_Data_Model::My_Data_Model(const QVector<GitData *> myDataInit, QObject *parent) :
   QAbstractTableModel(parent)

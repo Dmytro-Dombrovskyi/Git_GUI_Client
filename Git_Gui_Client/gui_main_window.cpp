@@ -136,7 +136,15 @@ void Gui_Main_Window::update_TableView_1()
 {
   mainModel = new My_Data_Model(myData, this);
 
+  FilterForTable_Model_1 = new QSortFilterProxyModel;
+  FilterForTable_Model_1->setSourceModel(mainModel);
+
+
   ui->tableView->setModel(mainModel);
+  ui->tableView_Files->setSortingEnabled(true);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
+
+  ui->tableView_Files->setModel(FilterForTable_Model_1);
+  //ui->tableView_Files->showColumn(1);
 }
