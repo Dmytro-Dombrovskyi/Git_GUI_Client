@@ -1,4 +1,3 @@
-//#include "git_gui_client.h"
 #include "gui_main_window.h"
 #include <QApplication>
 

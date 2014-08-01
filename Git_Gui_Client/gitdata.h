@@ -4,8 +4,12 @@
 #include <QtGui>
 #include <QtCore>
 
-struct revision_files;
-// class store data
+struct revision_files; // forward decl.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief The GitData class
+///  Class stored data from QProcess output (Database class)
+/// /////////////////////////////////////////////////////////////////////////////////////////////////
 class GitData
 {
 public:
@@ -20,7 +24,7 @@ public:
     QString get_commitMessage() const {return commitMessage_;}
     QString get_date()          const {return date_;}
     QString get_datePeriod()    const {return datePeriod_;}
-    int get_size()              const {return 8;} // TODO think about numeric counter
+    int get_size()              const {return SIZE;}
 
     //QVector<revision_files> get_revisionFiles()const;
     void set_revisionFiles(QString files);
@@ -28,16 +32,18 @@ public:
     QVector<revision_files*> revisionFiles_;
 
 protected:
-    void set_hash(QString hash);
-    void set_autorName(QString autorName);
-    void set_autorEmail(QString autorEmail);
-    void set_commiterEmail(QString commiterEmail);
-    void set_commiterName(QString commiterName);
-    void set_commitMessage(QString commitMessage);
-    void set_date(QString date);
-    void set_datePeriod(QString datePeriod);
+    // set data methods
+    void set_hash           (QString hash);
+    void set_autorName      (QString autorName);
+    void set_autorEmail     (QString autorEmail);
+    void set_commiterEmail  (QString commiterEmail);
+    void set_commiterName   (QString commiterName);
+    void set_commitMessage  (QString commitMessage);
+    void set_date           (QString date);
+    void set_datePeriod     (QString datePeriod);
 
-    void GitDataInit(const unsigned int number, const QString &initialString);
+    void GitDataInit(const unsigned int number,
+                     const QString &initialString);
     void set_file_changes_model();
 private:
     QString hash_;
@@ -48,19 +54,24 @@ private:
     QString commitMessage_;
     QString date_;
     QString datePeriod_;
-    enum {AUTOR_EMAIL,
-          AUTOR_NAME,
-          COMMITER_NAME,
-          COMMITER_EMAIL,
-          COMMIT,
-          DATE,
-          DATE_PERIOD,
-          HASH
-         };
+
+      enum {AUTOR_EMAIL,
+            AUTOR_NAME,
+            COMMITER_NAME,
+            COMMITER_EMAIL,
+            COMMIT,
+            DATE,
+            DATE_PERIOD,
+            HASH,
+            SIZE
+           };
 };
 
-
-// class which contain data in Format: File - Action
+///////////////////////////////////////////////////////////////////////////////////////
+///
+/// class which contain data in Format: File - Action
+///
+/// ///////////////////////////////////////////////////////////////////////////////////
 class revision_files
 {
 private:
@@ -78,11 +89,10 @@ public:
           fileName_ = items.at(1);
         }
     }
-
     virtual ~revision_files() {}
 
     QString get_fileAction()const  {return fileAction_;}
-    QString get_fileName()const    {return fileName_;}
+    QString get_fileName  ()const  {return fileName_;}
 };
 
 #endif // GITDATA_H

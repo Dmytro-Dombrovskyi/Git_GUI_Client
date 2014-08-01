@@ -2,6 +2,13 @@
 #include "gitdata.h"
 #include <QMessageBox>
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief My_Data_Model::My_Data_Model
+/// \param initDataArray        - initial data for GitData class
+/// \param initDataArrayTable2  - initial data for revisionFiles class(which are nested in GitData)
+/// \param parent               - initial data for parent class
+///  Constructor
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 My_Data_Model::My_Data_Model(const QVector<QStringList> initDataArray,
                              const QStringList initDataArrayTable2,
                              QObject *parent)
@@ -16,22 +23,28 @@ My_Data_Model::My_Data_Model(const QVector<QStringList> initDataArray,
   numberColumns_ = myDataItem_.at(0)->get_size();
 }
 
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief My_Data_Model::~My_Data_Model
+/// Destructor
+/// Delete memory in Vector of pointers on class GitData
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 My_Data_Model::~My_Data_Model()
 {
-//    int size = myDataItem_.size();
-//    for(int i = 0; i < size; ++i)
-//    {
-//        delete myDataItem_[i];
-//    }
+    int size = myDataItem_.size();
+    for(int i = 0; i < size; ++i)
+    {
+        delete myDataItem_[i];
+    }
 }
 
-
-
-// set data
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief My_Data_Model::data
+/// \param index
+/// \param nRole
+/// \return
+/// inherited method
+/// return data by Model index
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 QVariant My_Data_Model::data(const QModelIndex & index, int nRole) const
 {
   if(!index.isValid()) return QVariant();
@@ -60,7 +73,17 @@ QVariant My_Data_Model::data(const QModelIndex & index, int nRole) const
     }
   return (nRole == Qt::DisplayRole) ? QVariant(returnData) : QVariant();
 }
-// set header for columns
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief My_Data_Model::headerData
+/// \param section
+/// \param orientation
+/// \param role
+/// \return
+/// Inherited method
+/// return header in columns by index of section
+/// otherwise return empty QVariant();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 QVariant My_Data_Model::headerData(int section,
                     Qt::Orientation orientation,
                     int role
@@ -101,3 +124,4 @@ QVariant My_Data_Model::headerData(int section,
    }
    return QVariant();
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

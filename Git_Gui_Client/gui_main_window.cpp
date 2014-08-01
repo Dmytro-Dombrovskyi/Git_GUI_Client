@@ -6,8 +6,15 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
+#include <QDesktopServices>
+#include <QUrl>
 
-// constructor
+/////////////////////////////////////////////////////////////////////////////////////////////
+/// constructor
+/// set ui
+/// set Process
+/// set connection
+////////////////////////////////////////////////////////////////////////////////////////////
 Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Gui_Main_Window)
@@ -18,17 +25,32 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::~Gui_Main_Window
+/// Destructor:
+/// Close QProcess
+/// delete memory
+//////////////////////////////////////////////////////////////////////////////////////////////
 Gui_Main_Window::~Gui_Main_Window()
 {
     Git->close();
     delete ui;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::on_actionExit_triggered
+/// Action Quit: Quit programm
+//////////////////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::on_actionExit_triggered()
 {
     QApplication::instance()->quit();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::on_actionOpen_triggered
+/// Action Open: get dialog for user///
+/// If this folder exist - start program
+////////////////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::on_actionOpen_triggered()
 {
     if(set_workingDirectory())
@@ -37,6 +59,13 @@ void Gui_Main_Window::on_actionOpen_triggered()
     }    
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::set_workingDirectory
+///  Dialog for user:
+/// User should pen .git folder or folder which have .git folder
+/// If this folder exist - set working derectory and
+/// return true if operation was ok or false otherwise
+//////////////////////////////////////////////////////////////////////////////////////////////
 bool Gui_Main_Window::set_workingDirectory()
 {
   QString DirectoryName =
@@ -46,6 +75,14 @@ bool Gui_Main_Window::set_workingDirectory()
   workingDirectory_ = DirectoryName;
   return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::start_programm
+///  Set default programm execution file(git.exe for windows or "git" for linux),
+///  Start QProcess with parametrs:
+///  Processing data ouput
+///  Set my TableModel
+///  Set TableViews
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::start_programm()
 {
@@ -53,7 +90,7 @@ void Gui_Main_Window::start_programm()
   {
       set_programPath(); // set default programm execution file(git.exe for windows or "git" for linux)
 
-      QStringList command;
+      QStringList command; // command for git
       command << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
 
       QString data1 = start_process(command); // start Git process and read output
@@ -71,15 +108,14 @@ void Gui_Main_Window::start_programm()
                                         initialItemsForGitData_2,
                                         this);
           update_TableView_1();
-          // clear strings
-//          command.clear();
-//          data1.clear();
-//          data2.clear();
         }
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::set_programPath
+/// set program execution file depends platform
+/////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::set_programPath()
 {
   #ifdef Q_OS_WIN
@@ -88,7 +124,12 @@ void Gui_Main_Window::set_programPath()
     programPath_ = "git";
   #endif
 }
-// start QProcess  - start git
+
+/////////////////////////////////////////////////////////////////////////
+/// Start QProcess, set program and run command.
+/// Return data output if process run correctly,
+/// else get error message
+/// /////////////////////////////////////////////////////////////////////
 QString Gui_Main_Window::start_process(const QStringList & command)
 {
   Git->setWorkingDirectory(get_workingDirectory());
@@ -98,11 +139,15 @@ QString Gui_Main_Window::start_process(const QStringList & command)
   if(!error.isEmpty())
     {
       qDebug() << error;
+      QMessageBox::critical(this,"Error", error);
     }
   return (Git->readAllStandardOutput());
 }
 
-// divide data from string and return array of stringlist
+////////////////////////////////////////////////////////////////////////////
+/// Divede data from string(Data output from Git returned process)
+/// Processing data and prepare for my own QTableModel
+////////////////////////////////////////////////////////////////////////////
 QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
                                       const QString splitter_1,
                                       const QString splitter_2)
@@ -117,25 +162,42 @@ QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
   }
   return datalist;
 }
-/////////////////////////////////////////////////////////////////////////////////
 
-// set my model with data to table view 1.
+/////////////////////////////////////////////////////////////////////////////////
+/// Set my tableModel class to TableView1,
+/// than set correct size for rows and coulmns
+////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::update_TableView_1()
 {
-
-//  mainModel = new My_Data_Model(myData, this);
-
- // FilterForTable_Model_1 = new QSortFilterProxyModel;
-// FilterForTable_Model_1->setSourceModel(mainModel);
-
-
   ui->tableView->setModel(mainModel);
 
-  ui->tableView_Files->setSortingEnabled(true);
+//  ui->tableView_Files->setSortingEnabled(true);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
   ui->tableView->setVisible(true);
- //  ui->tableView->m
- // ui->tableView_Files->setModel(FilterForTable_Model_1);
- //ui->tableView_Files->showColumn(1);
+}
+/////////////////////////////////////////////////////////////////////////////////
+/// Set Help message: add links for my Github with source,
+/// add link on git website
+/// ////////////////////////////////////////////////////////////////////////////
+// help message
+void Gui_Main_Window::on_actionAbout_triggered()
+{
+    QMessageBox aboutBox;
+    aboutBox.setIcon(QMessageBox::Information);
+    aboutBox.setWindowTitle("Information");
+    aboutBox.setText(tr("Gui Client for git."));
+
+    aboutBox.setInformativeText(tr("You can download source:  "
+                                  "<a href='https://github.com/Dmytro-Dombrovskyi/Git_GUI_Client'>Git_GUI_Client</a> "
+                                   "Author e-mail: dombrovskiy11@gmail.com \n"
+                                   "More about Git: "
+                                   "<a href='http://git-scm.com/'>git-scm.com</a>"));
+
+    aboutBox.setSizePolicy( QSizePolicy(QSizePolicy::Preferred,
+    QSizePolicy::Preferred));
+    aboutBox.setSizeGripEnabled(true);
+    aboutBox.setAttribute(Qt::WA_Resized);
+    aboutBox.setStandardButtons(QMessageBox::Close);
+    aboutBox.exec();
 }
