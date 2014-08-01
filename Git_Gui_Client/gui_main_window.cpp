@@ -75,6 +75,8 @@ bool Gui_Main_Window::set_workingDirectory()
   if(DirectoryName.isEmpty()) return false;
 
   workingDirectory_ = DirectoryName;
+
+  ui->statusbar->showMessage("Load from: \t" + DirectoryName); // set status bar
   return true;
 }
 
@@ -198,6 +200,8 @@ void Gui_Main_Window::update_TableView_1()
   ui->tableView_Files->resizeColumnsToContents();
   ui->tableView_Files->resizeRowsToContents();
   ui->tableView_Files->setVisible(true);
+  //ui->centralwidget->resize(ui->tableView->width(), ui->centralwidget->height());
+  //connect(ui->tableView, SIGNAL(activated(QModelIndex)), ui->textBrowser, SLOT())
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +216,7 @@ void Gui_Main_Window::on_actionAbout_triggered()
     aboutBox.setWindowTitle("Information");
     aboutBox.setText(tr("Gui Client for git."));
 
-    aboutBox.setInformativeText(tr("You can download source:  "
+    aboutBox.setInformativeText(tr("You can load source from:  "
                                   "<a href='https://github.com/Dmytro-Dombrovskyi/Git_GUI_Client'>Git_GUI_Client</a> "
                                    "Author e-mail: dombrovskiy11@gmail.com \n"
                                    "More about Git: "

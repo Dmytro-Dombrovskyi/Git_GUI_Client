@@ -27,7 +27,7 @@ private slots:
     void on_actionExit_triggered ();
     void on_actionOpen_triggered ();
     void on_actionAbout_triggered();
-    void mySlot() { }
+    //void mySlot() { }
 
 protected:
     void                 set_programPath     (); // set default programm execution file(git.exe for windows or "git" for linux)
