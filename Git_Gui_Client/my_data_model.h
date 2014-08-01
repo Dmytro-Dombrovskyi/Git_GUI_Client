@@ -2,7 +2,6 @@
 #define MY_DATA_MODEL_H
 
 #include <QAbstractTableModel>
-//#include <>
 #include "gitdata.h"
 
 class My_Data_Model : public QAbstractTableModel
@@ -22,19 +21,20 @@ protected:
         HASH
        };
 
-public:
-  explicit My_Data_Model(const QVector<GitData*> myDataInit,
-                         QObject *parent = 0);
+public:  
+  My_Data_Model(const QVector<QStringList>,
+                const QStringList,
+                QObject *parent = 0);
+
   QVariant data(const QModelIndex & index, int nRole) const;
   int rowCount(const QModelIndex &) const {return numberRows_;}
-  int columnCount(const QModelIndex &) const {return numberColumns_;}
-  //QString findData(const QModelIndex&indexRowColumn)const;
+  int columnCount(const QModelIndex &) const {return numberColumns_;}  
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
   virtual ~My_Data_Model();
+
 signals:
 
 public slots:
-
 
 };
 

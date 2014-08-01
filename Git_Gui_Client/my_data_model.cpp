@@ -2,29 +2,31 @@
 #include "gitdata.h"
 #include <QMessageBox>
 
-My_Data_Model::My_Data_Model(const QVector<GitData *> myDataInit, QObject *parent) :
-  QAbstractTableModel(parent)
+My_Data_Model::My_Data_Model(const QVector<QStringList> initDataArray,
+                             const QStringList initDataArrayTable2,
+                             QObject *parent)
+  : QAbstractTableModel(parent)
 {
-  if(!myDataInit.isEmpty())
+  for(int i = 0; i < initDataArray.size(); ++i)
     {
-      int dataSize = myDataInit.size();
-      for(int i = 0; i < dataSize; ++i)
-        {
-          myDataItem_.append(myDataInit.at(i));
-        }
-      numberRows_ = myDataItem_.size();
-      numberColumns_ = myDataItem_.at(0)->get_size();
+        myDataItem_.append(new GitData(initDataArray.at(i)));
+        myDataItem_[i]->set_revisionFiles(initDataArrayTable2.at(i));
     }
-  this->setHeaderData(0, Qt::Horizontal, "Number", Qt::DisplayRole);
+  numberRows_ = myDataItem_.size();
+  numberColumns_ = myDataItem_.at(0)->get_size();
 }
+
+
+
+
 
 My_Data_Model::~My_Data_Model()
 {
-    int size = myDataItem_.size();
-    for(int i = 0; i < size; ++i)
-    {
-        delete myDataItem_[i];
-    }
+//    int size = myDataItem_.size();
+//    for(int i = 0; i < size; ++i)
+//    {
+//        delete myDataItem_[i];
+//    }
 }
 
 

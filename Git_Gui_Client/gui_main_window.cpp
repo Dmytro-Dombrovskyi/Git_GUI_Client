@@ -21,13 +21,6 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 Gui_Main_Window::~Gui_Main_Window()
 {
     Git->close();
-
-    int size = myData.size();
-    for(int i = 0; i < size; ++i)
-    {
-        delete myData[i];
-    }
-
     delete ui;
 }
 
@@ -69,26 +62,20 @@ void Gui_Main_Window::start_programm()
       command << "log" << "--pretty=format:" << "--name-status";
       QString data2 = start_process(command);
 
-      if(!data1.isEmpty())
-      {
-         QVector<QStringList> initialItemsForGitData = processing_data(data1);
-
-          set_myDataClass(initialItemsForGitData);         
-          update_TableView_1();
-      }
-      command.clear();
-      data1.clear();
-
-      if(!data2.isEmpty())
+      if(!data1.isEmpty() && !data2.isEmpty())
         {
-           QStringList temp = data2.split("\n\n");
-           int count =  0;
-           foreach(QString doubleString, temp)
-             {
-               myData.at(count)->set_revisionFiles(doubleString);
-             }
+          QVector<QStringList> initialItemsForGitData_1 = processing_data(data1);
+          QStringList initialItemsForGitData_2 = data2.split("\n\n");
+
+          mainModel = new My_Data_Model(initialItemsForGitData_1,
+                                        initialItemsForGitData_2,
+                                        this);
+          update_TableView_1();
+          // clear strings
+//          command.clear();
+//          data1.clear();
+//          data2.clear();
         }
-      data2.clear();      
     }
 }
 
@@ -130,20 +117,13 @@ QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
   }
   return datalist;
 }
-
-void Gui_Main_Window::set_myDataClass(const QVector<QStringList> &data)
-{
-  for(int i = 0; i < data.size(); ++i)
-    {
-        myData.append(new GitData(data.at(i)));
-    }
-}
+/////////////////////////////////////////////////////////////////////////////////
 
 // set my model with data to table view 1.
 void Gui_Main_Window::update_TableView_1()
 {
 
-  mainModel = new My_Data_Model(myData, this);
+//  mainModel = new My_Data_Model(myData, this);
 
  // FilterForTable_Model_1 = new QSortFilterProxyModel;
 // FilterForTable_Model_1->setSourceModel(mainModel);
@@ -155,7 +135,7 @@ void Gui_Main_Window::update_TableView_1()
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
   ui->tableView->setVisible(true);
-//  ui->tableView->m
+ //  ui->tableView->m
  // ui->tableView_Files->setModel(FilterForTable_Model_1);
-  //ui->tableView_Files->showColumn(1);
+ //ui->tableView_Files->showColumn(1);
 }

@@ -6,7 +6,7 @@ GitData::GitData(const QStringList &initialData)
 {
   if(!(initialData.isEmpty()))
     {
-      unsigned int counter = 1;
+      unsigned int counter = 0;
       foreach(QString initialItem, initialData)
         {
           if(!(initialItem.isEmpty()))
@@ -18,11 +18,11 @@ GitData::GitData(const QStringList &initialData)
 
 GitData::~GitData()
 {
-   int size = revisionFiles_.size();
-   for(int i = 0; i < size; ++i)
-   {
-       delete revisionFiles_[i];
-   }
+//   int size = revisionFiles_.size();
+//   for(int i = 0; i < size; ++i)
+//   {
+//       delete revisionFiles_[i];
+//   }
 }
 
 // Data initialize

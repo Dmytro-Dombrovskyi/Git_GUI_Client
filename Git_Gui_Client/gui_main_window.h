@@ -31,25 +31,21 @@ protected:
     bool set_workingDirectory();
     QString get_workingDirectory() const {return workingDirectory_;}
     QString start_process(const QStringList & command); // start Git process and read output
+    void start_programm();
 
     QString get_programPath() const {return programPath_;}
     QVector<QStringList> processing_data(const QString &data,
                          const QString splitter_1 = "\n",
                          const QString splitter_2 = "::");
 
-    void set_myDataClass(const QVector<QStringList> &data);   
     void update_TableView_1();
-    void start_programm();
 
 private:
     Ui::Gui_Main_Window *ui;
-    QProcess *Git;
-    QVector<GitData*> myData; //class for TableView_1;
+    QProcess *Git;    
 
     My_Data_Model * mainModel;
     QSortFilterProxyModel *FilterForTable_Model_1;
-
- //   SingleItemView;
 
     QString workingDirectory_;
     QString programPath_;
