@@ -16,6 +16,10 @@ GitData::GitData(const QStringList &initialData)
       foreach(QString initialItem, initialData)
         {
           if(!(initialItem.isEmpty()))
+              if(initialItem.contains('\"')) // delete '"' character from string(bag)
+                {
+                  initialItem.remove(QRegExp("\""));
+                }
               GitDataInit(counter, initialItem);
           ++counter;
         }

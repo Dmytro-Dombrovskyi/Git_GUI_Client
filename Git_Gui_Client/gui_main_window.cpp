@@ -20,8 +20,10 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     ui(new Ui::Gui_Main_Window)
 {
     ui->setupUi(this);
-    Git = new QProcess(this); 
+    ui->lineEdit_FilterPeriod->setFixedWidth(150);
     ui->textBrowser->setReadOnly(true);
+
+    Git = new QProcess(this);
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
 }
 
@@ -168,14 +170,36 @@ QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
 /// than set correct size for rows and coulmns
 ////////////////////////////////////////////////////////////////////////////////
 void Gui_Main_Window::update_TableView_1()
-{
-  ui->tableView->setModel(mainModel);
+{  
+  // set filter and connect to model
+  FilterForTable_Model_1 = new QSortFilterProxyModel;
+  FilterForTable_Model_1->setSourceModel(mainModel);
+  FilterForTable_Model_1->setFilterCaseSensitivity(Qt::CaseInsensitive);
+  FilterForTable_Model_1->setFilterKeyColumn(6);
 
-//  ui->tableView_Files->setSortingEnabled(true);
+  // set table View 1
+  ui->tableView->setModel(FilterForTable_Model_1);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
   ui->tableView->setVisible(true);
+
+  // hide columns in table View 1
+  ui->tableView->setColumnHidden(0, true);
+  ui->tableView->setColumnHidden(1, true);
+  ui->tableView->setColumnHidden(2, true);
+  ui->tableView->setColumnHidden(5, true);
+  ui->tableView->setColumnHidden(7, true);
+
+  connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)),
+          FilterForTable_Model_1,    SLOT(setFilterWildcard(QString)));
+
+  // set Table View 2
+  ui->tableView_Files->setModel(mainModel);
+  ui->tableView_Files->resizeColumnsToContents();
+  ui->tableView_Files->resizeRowsToContents();
+  ui->tableView_Files->setVisible(true);
 }
+
 /////////////////////////////////////////////////////////////////////////////////
 /// Set Help message: add links for my Github with source,
 /// add link on git website

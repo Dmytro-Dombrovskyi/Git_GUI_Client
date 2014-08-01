@@ -27,6 +27,7 @@ private slots:
     void on_actionExit_triggered ();
     void on_actionOpen_triggered ();
     void on_actionAbout_triggered();
+    void mySlot() { }
 
 protected:
     void                 set_programPath     (); // set default programm execution file(git.exe for windows or "git" for linux)
@@ -44,6 +45,9 @@ private:
     QProcess              * Git;
     My_Data_Model         * mainModel;
     QSortFilterProxyModel * FilterForTable_Model_1;
+    QItemSelectionModel   * SelectionModel;
+
+
     QString                 workingDirectory_;
     QString                 programPath_;
 };

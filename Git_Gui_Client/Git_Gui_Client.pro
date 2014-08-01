@@ -17,14 +17,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
     gui_main_window.cpp \
     gitdata.cpp \
-    my_data_model.cpp \
-    myfilterproxymodel_table_1.cpp
+    my_data_model.cpp
 
 HEADERS  += \
     gui_main_window.h \
     gitdata.h \
-    my_data_model.h \
-    myfilterproxymodel_table_1.h
+    my_data_model.h
 
 FORMS    += \
     gui_main_window.ui
