@@ -7,6 +7,7 @@
 #include <QTreeView>
 #include "gitdata.h"
 #include "my_data_model.h"
+#include <QMessageBox>
 
 namespace Ui {
 class Gui_Main_Window;
@@ -45,7 +46,9 @@ private:
     QProcess              * Git;
     My_Data_Model         * mainModel;
     QSortFilterProxyModel * FilterForTable_Model_1;
-    QItemSelectionModel   * SelectionModel;
+
+///    QItemSelectionModel   * SelectionModel;
+///    QMessageBox           * StatisticBox;
 
 
     QString                 workingDirectory_;

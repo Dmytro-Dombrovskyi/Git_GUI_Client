@@ -200,8 +200,13 @@ void Gui_Main_Window::update_TableView_1()
   ui->tableView_Files->resizeColumnsToContents();
   ui->tableView_Files->resizeRowsToContents();
   ui->tableView_Files->setVisible(true);
-  //ui->centralwidget->resize(ui->tableView->width(), ui->centralwidget->height());
-  //connect(ui->tableView, SIGNAL(activated(QModelIndex)), ui->textBrowser, SLOT())
+////////////////////////////////////////////////////////////////
+//  // try to find index in model
+//  SelectionModel = new QItemSelectionModel(FilterForTable_Model_1);
+//  ui->tableView->setSelectionModel(SelectionModel);
+// // ui->tableView_Files->setSelectionModel(SelectionModel);
+// // ui->textBrowser->setText(ui->tableView->currentIndex().data().toString());
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////
