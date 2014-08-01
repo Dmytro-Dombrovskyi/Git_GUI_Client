@@ -21,6 +21,13 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 Gui_Main_Window::~Gui_Main_Window()
 {
     Git->close();
+
+    int size = myData.size();
+    for(int i = 0; i < size; ++i)
+    {
+        delete myData[i];
+    }
+
     delete ui;
 }
 
@@ -94,7 +101,7 @@ void Gui_Main_Window::set_programPath()
     programPath_ = "git";
   #endif
 }
-
+// start QProcess  - start git
 QString Gui_Main_Window::start_process(const QStringList & command)
 {
   Git->setWorkingDirectory(get_workingDirectory());
@@ -108,6 +115,7 @@ QString Gui_Main_Window::start_process(const QStringList & command)
   return (Git->readAllStandardOutput());
 }
 
+// divide data from string and return array of stringlist
 QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
                                       const QString splitter_1,
                                       const QString splitter_2)
@@ -134,17 +142,20 @@ void Gui_Main_Window::set_myDataClass(const QVector<QStringList> &data)
 // set my model with data to table view 1.
 void Gui_Main_Window::update_TableView_1()
 {
+
   mainModel = new My_Data_Model(myData, this);
 
-  FilterForTable_Model_1 = new QSortFilterProxyModel;
-  FilterForTable_Model_1->setSourceModel(mainModel);
+ // FilterForTable_Model_1 = new QSortFilterProxyModel;
+// FilterForTable_Model_1->setSourceModel(mainModel);
 
 
   ui->tableView->setModel(mainModel);
+
   ui->tableView_Files->setSortingEnabled(true);
   ui->tableView->resizeColumnsToContents();
   ui->tableView->resizeRowsToContents();
-
-  ui->tableView_Files->setModel(FilterForTable_Model_1);
+  ui->tableView->setVisible(true);
+//  ui->tableView->m
+ // ui->tableView_Files->setModel(FilterForTable_Model_1);
   //ui->tableView_Files->showColumn(1);
 }

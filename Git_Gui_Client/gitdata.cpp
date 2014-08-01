@@ -1,4 +1,5 @@
 #include "gitdata.h"
+#include <QMessageBox>
 
 // constructor
 GitData::GitData(const QStringList &initialData)
@@ -15,37 +16,37 @@ GitData::GitData(const QStringList &initialData)
     }  
 }
 
+GitData::~GitData()
+{
+   int size = revisionFiles_.size();
+   for(int i = 0; i < size; ++i)
+   {
+       delete revisionFiles_[i];
+   }
+}
+
 // Data initialize
 void GitData::GitDataInit(const unsigned int number, const QString &initialString)
 {
   switch(number)
     {
-    case 1:
-      hash_ = initialString;
+    case AUTOR_EMAIL:    hash_          = initialString;
     break;
-    case 2:
-      autorName_ = initialString;
+    case AUTOR_NAME:     autorName_     = initialString;
     break;
-    case 3:
-      autorEmail_ = initialString;
+    case COMMITER_NAME:  autorEmail_    = initialString;
     break;
-    case 4:
-      commiterEmail_ = initialString;
+    case COMMITER_EMAIL: commiterEmail_ = initialString;
     break;
-    case 5:
-      commiterName_ = initialString;
+    case COMMIT:         commiterName_  = initialString;
     break;
-    case 6:
-      commitMessage_ = initialString;
+    case DATE:           commitMessage_ = initialString;
     break;
-    case 7:
-      date_ = initialString;
+    case DATE_PERIOD:    date_          = initialString;
     break;
-    case 8:
-      datePeriod_ = initialString;
+    case HASH:           datePeriod_    = initialString;
     break;
-  default:
-    qDebug() << "Initial error";
+  default:               qDebug() << "Initial error";
     return;
     }
 }

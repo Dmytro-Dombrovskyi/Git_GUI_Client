@@ -8,10 +8,19 @@
 class My_Data_Model : public QAbstractTableModel
 {
   Q_OBJECT
-private:
+protected:
   QVector<GitData*> myDataItem_;
   unsigned int numberRows_;
   unsigned int numberColumns_;
+  enum {AUTOR_EMAIL,
+        AUTOR_NAME,
+        COMMITER_NAME,
+        COMMITER_EMAIL,
+        COMMIT,
+        DATE,
+        DATE_PERIOD,
+        HASH
+       };
 
 public:
   explicit My_Data_Model(const QVector<GitData*> myDataInit,
@@ -20,7 +29,8 @@ public:
   int rowCount(const QModelIndex &) const {return numberRows_;}
   int columnCount(const QModelIndex &) const {return numberColumns_;}
   //QString findData(const QModelIndex&indexRowColumn)const;
-  virtual ~My_Data_Model() { }
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+  virtual ~My_Data_Model();
 signals:
 
 public slots:

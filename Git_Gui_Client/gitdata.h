@@ -10,7 +10,7 @@ class GitData
 {
 public:
     explicit GitData(const QStringList &initialData);
-    virtual ~GitData() {}
+    virtual ~GitData();
 
     QString get_hash()          const {return hash_;}
     QString get_autorName()     const {return autorName_;}
@@ -48,6 +48,15 @@ private:
     QString commitMessage_;
     QString date_;
     QString datePeriod_;
+    enum {AUTOR_EMAIL,
+          AUTOR_NAME,
+          COMMITER_NAME,
+          COMMITER_EMAIL,
+          COMMIT,
+          DATE,
+          DATE_PERIOD,
+          HASH
+         };
 };
 
 
