@@ -8,6 +8,8 @@
 #include <QString>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QWindow>
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /// constructor
@@ -25,6 +27,17 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 
     Git = new QProcess(this);
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
+
+    QPalette pal = ui->ExitButton->palette();
+    pal.setBrush(QPalette::Button, QBrush(Qt::white, Qt::Dense3Pattern));
+    pal.setColor(QPalette::ButtonText, Qt::blue);
+    pal.setColor(QPalette::Text, Qt::white);
+    pal.setColor(QPalette::Active, QPalette::Base, Qt::black);
+    pal.setBrush(QPalette::Background, QBrush(Qt::cyan, Qt::Dense2Pattern));
+
+    ui->ExitButton->setPalette(pal);
+    ui->OpenButton->setPalette(pal);
+    ui->centralwidget->setPalette(pal);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
