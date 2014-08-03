@@ -10,14 +10,14 @@
 ///  Constructor
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 My_Data_Model::My_Data_Model(const QVector<QStringList> initDataArray,
-                             const QStringList initDataArrayTable2,
+                             /*const QStringList initDataArrayTable2,*/
                              QObject *parent)
   : QAbstractTableModel(parent)
 {
   for(int i = 0; i < initDataArray.size(); ++i)
     {
         myDataItem_.append(new GitData(initDataArray.at(i)));
-        myDataItem_[i]->set_revisionFiles(initDataArrayTable2.at(i));
+        //myDataItem_[i]->set_revisionFiles(initDataArrayTable2.at(i));
     }
   numberRows_ = myDataItem_.size();
   numberColumns_ = myDataItem_.at(0)->get_size();
@@ -68,8 +68,8 @@ QVariant My_Data_Model::data(const QModelIndex & index, int nRole) const
       break;
     case HASH:            returnData = myDataItem_.at(index.row())->get_hash();
       break;
-    default:              qDebug() << "Fail return data";
-
+  //case FILE_ACTIONS:      returnData = myDataItem_.at(index.row())->get_revisionFiles().at(index.row())->get_fileName();
+    default:              qWarning() << "Fail return data";
     }
   return (nRole == Qt::DisplayRole) ? QVariant(returnData) : QVariant();
 }
@@ -111,7 +111,7 @@ QVariant My_Data_Model::headerData(int section,
            case DATE_PERIOD:    Header = "Date period";
                break;
            case HASH:           Header = "SHA-1";
-               break;
+               break;           
            default:
 //               QMessageBox::critical(this, "Error", "Couldn't set header");
                qDebug() << "Error, Couldn't set feader: " << Header;

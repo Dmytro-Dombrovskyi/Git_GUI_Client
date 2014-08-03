@@ -7,6 +7,7 @@
 #include <QTreeView>
 #include "gitdata.h"
 #include "my_data_model.h"
+#include "seconddatamodel.h"
 #include <QMessageBox>
 
 namespace Ui {
@@ -22,13 +23,18 @@ class Gui_Main_Window : public QMainWindow
 public:
     explicit Gui_Main_Window(QWidget *parent = 0);
     ~Gui_Main_Window();
+
 signals:
+    void setDataFromIndex(const QString &);
 
 private slots:
     void on_actionExit_triggered ();
     void on_actionOpen_triggered ();
     void on_actionAbout_triggered();
-    //void mySlot() { }
+
+public slots:    
+    void catchDataIndex  (const QModelIndex &);
+    void setNewModelFiles(const QModelIndex &);
 
 protected:
     void                 set_programPath     (); // set default programm execution file(git.exe for windows or "git" for linux)
@@ -45,6 +51,7 @@ private:
     Ui::Gui_Main_Window   * ui;
     QProcess              * Git;
     My_Data_Model         * mainModel;
+    QVector<SecondDataModel *> secondModel;
     QSortFilterProxyModel * FilterForTable_Model_1;
 
 ///    QItemSelectionModel   * SelectionModel;

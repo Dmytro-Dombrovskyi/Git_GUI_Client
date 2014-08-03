@@ -8,7 +8,7 @@
 /// Parameters is List of strings:
 /// Initialize data by index of strings in List
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-GitData::GitData(const QStringList &initialData)
+GitData::GitData(const QStringList &initialData, QObject *parent) : QObject(parent)
 {
   if(!(initialData.isEmpty()))
     {
@@ -29,15 +29,10 @@ GitData::GitData(const QStringList &initialData)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief GitData::~GitData
 /// Virtual Destructor
-/// Delete block where stored pointers on class revisionFiles
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 GitData::~GitData()
 {
-   size_t size = revisionFiles_.size();
-   for(size_t i = 0; i < size; ++i)
-   {
-       delete revisionFiles_[i];
-   }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,16 +71,16 @@ void GitData::GitDataInit(const unsigned int number, const QString &initialStrin
 /// \param files
 /// Set revisionFiles class
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-void GitData::set_revisionFiles(QString files)
-{
-  if(files.isEmpty()) return;
+//void GitData::set_revisionFiles(QString files)
+//{
+//  if(files.isEmpty()) return;
 
-  QStringList strings = files.split("\n");
-  foreach(QString current, strings)
-    {
-      revisionFiles_.append(new revision_files(current));
-    }
-}
+//  QStringList strings = files.split("\n");
+//  foreach(QString current, strings)
+//    {
+//      revisionFiles_.append(new revision_files(current));
+//    }
+//}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief GitData::set...

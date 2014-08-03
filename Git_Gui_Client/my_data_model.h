@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 #include "gitdata.h"
+class Gui_Main_Window;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief The My_Data_Model class
@@ -12,7 +13,9 @@ class My_Data_Model : public QAbstractTableModel
 {
   Q_OBJECT
 protected:
-  QVector<GitData*> myDataItem_;
+  friend class Gui_Main_Window;
+
+  QVector<GitData*> myDataItem_;  
   unsigned int      numberRows_;
   unsigned int      numberColumns_;
 
@@ -26,7 +29,7 @@ protected:
                     HASH
                   };
 public:  
-  My_Data_Model         (const QVector<QStringList>, const QStringList, QObject *parent = 0);
+  My_Data_Model         (const QVector<QStringList>, QObject *parent = 0);
   QVariant data         (const QModelIndex & index, int nRole) const;
   int      rowCount     (const QModelIndex &) const {return numberRows_;}
   int      columnCount  (const QModelIndex &) const {return numberColumns_;}

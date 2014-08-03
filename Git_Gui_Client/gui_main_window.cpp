@@ -16,28 +16,40 @@
 /// set ui
 /// set Process
 /// set connection
+/// set colors
 ////////////////////////////////////////////////////////////////////////////////////////////
 Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Gui_Main_Window)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
     ui->lineEdit_FilterPeriod->setFixedWidth(150);
     ui->textBrowser->setReadOnly(true);
 
     Git = new QProcess(this);
-    connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
+    FilterForTable_Model_1 = new QSortFilterProxyModel;
+
+
 
     QPalette pal = ui->ExitButton->palette();
     pal.setBrush(QPalette::Button, QBrush(Qt::white, Qt::Dense3Pattern));
     pal.setColor(QPalette::ButtonText, Qt::blue);
     pal.setColor(QPalette::Text, Qt::white);
     pal.setColor(QPalette::Active, QPalette::Base, Qt::black);
-    pal.setBrush(QPalette::Background, QBrush(Qt::cyan, Qt::Dense2Pattern));
 
     ui->ExitButton->setPalette(pal);
     ui->OpenButton->setPalette(pal);
     ui->centralwidget->setPalette(pal);
+
+    this->setPalette(pal);
+
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)),this, SLOT(catchDataIndex(QModelIndex)) );
+    connect(ui->tableView, SIGNAL(activated(QModelIndex)),this, SLOT(catchDataIndex(QModelIndex)) );
+    connect(this, SIGNAL(setDataFromIndex(QString)), ui->textBrowser, SLOT(setText(QString)) );
+    connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
+    connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)), FilterForTable_Model_1, SLOT(setFilterWildcard(QString)) );
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(setNewModelFiles(QModelIndex)));
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +120,7 @@ void Gui_Main_Window::start_programm()
       set_programPath(); // set default programm execution file(git.exe for windows or "git" for linux)
 
       QStringList command; // command for git
-      command << "log" << "--pretty=format:\"%h :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
+      command << "log" << "--pretty=format:\"%H :: %an :: %ae :: %ce :: %cn :: %s :: %cd :: %cr\"";
 
       QString data1 = start_process(command); // start Git process and read output
       command.clear();
@@ -121,9 +133,15 @@ void Gui_Main_Window::start_programm()
           QVector<QStringList> initialItemsForGitData_1 = processing_data(data1);
           QStringList initialItemsForGitData_2 = data2.split("\n\n");
 
-          mainModel = new My_Data_Model(initialItemsForGitData_1,
-                                        initialItemsForGitData_2,
-                                        this);
+          mainModel = new My_Data_Model(initialItemsForGitData_1, this);
+
+          QStringList initDataForSeconModel;
+          foreach(QString dataList, initialItemsForGitData_2)
+          {
+              initDataForSeconModel = dataList.split("\n");
+              secondModel.append(new SecondDataModel(initDataForSeconModel, this));
+              initDataForSeconModel.clear();
+          }
           update_TableView_1();
         }
     }
@@ -187,7 +205,7 @@ QVector<QStringList> Gui_Main_Window::processing_data(const QString &data,
 void Gui_Main_Window::update_TableView_1()
 {  
   // set filter and connect to model
-  FilterForTable_Model_1 = new QSortFilterProxyModel;
+
   FilterForTable_Model_1->setSourceModel(mainModel);
   FilterForTable_Model_1->setFilterCaseSensitivity(Qt::CaseInsensitive);
   FilterForTable_Model_1->setFilterKeyColumn(6);
@@ -204,22 +222,6 @@ void Gui_Main_Window::update_TableView_1()
   ui->tableView->setColumnHidden(2, true);
   ui->tableView->setColumnHidden(5, true);
   ui->tableView->setColumnHidden(7, true);
-
-  connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)),
-          FilterForTable_Model_1,    SLOT(setFilterWildcard(QString)));
-
-  // set Table View 2
-  ui->tableView_Files->setModel(mainModel);
-  ui->tableView_Files->resizeColumnsToContents();
-  ui->tableView_Files->resizeRowsToContents();
-  ui->tableView_Files->setVisible(true);
-////////////////////////////////////////////////////////////////
-//  // try to find index in model
-//  SelectionModel = new QItemSelectionModel(FilterForTable_Model_1);
-//  ui->tableView->setSelectionModel(SelectionModel);
-// // ui->tableView_Files->setSelectionModel(SelectionModel);
-// // ui->textBrowser->setText(ui->tableView->currentIndex().data().toString());
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -246,4 +248,42 @@ void Gui_Main_Window::on_actionAbout_triggered()
     aboutBox.setAttribute(Qt::WA_Resized);
     aboutBox.setStandardButtons(QMessageBox::Close);
     aboutBox.exec();
+}
+
+// Slot for setting text
+void Gui_Main_Window::catchDataIndex(const QModelIndex & index)
+{
+    if(index.isValid())
+    {
+        QString SHA_1 =      "<H4> SHA-1: <font color=\"#FF8798\"> " +
+                             mainModel->myDataItem_.at(index.row())->get_hash().toHtmlEscaped() +
+                             "</font></H4>";
+
+        QString commit =     "<H3> Commit: <b><font color=\"#F79105\"> *" +
+                             mainModel->myDataItem_.at(index.row())->get_commitMessage() +
+                             "</font></b></H3>";
+
+        QString commiter =   "<H4> Commiter: <i><font color=\"#E0E0EB\"> " +
+                             mainModel->myDataItem_.at(index.row())->get_commiterName() +
+                             "\"" + mainModel->myDataItem_.at(index.row())->get_commiter_Email() + "\"" +
+                             "</font></i></H4>";
+
+        QString autor  =     "<H4> Autor: <i><font color=\"#E0E0EB\"> " +
+                             mainModel->myDataItem_.at(index.row())->get_autorName() +
+                             " \" " + mainModel->myDataItem_.at(index.row())->get_autorEmail() + " \" " +
+                             "</font></i></H4>";
+
+        emit setDataFromIndex(SHA_1 + commit + commiter + autor);
+    }
+}
+
+void Gui_Main_Window::setNewModelFiles(const QModelIndex & index)
+{
+    if(index.isValid())
+    {
+        // set Table View 2
+        ui->tableView_Files->setModel(secondModel.at(index.row()));
+        ui->tableView_Files->resizeColumnToContents(0);
+        ui->tableView_Files->resizeRowsToContents();
+    }
 }
