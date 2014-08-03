@@ -134,4 +134,72 @@ void GitData::set_datePeriod(QString datePeriod)
     if(datePeriod.isEmpty() || datePeriod_ == datePeriod) return;
     datePeriod_ = datePeriod;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief revision_files::revision_files
+/// \param line
+/// \param parent
+/// Constructor for revision_files class
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+revision_files::revision_files(QString line, QObject * parent)
+    : QObject(parent)
+{
+    if(!line.isEmpty())
+    {
+        QStringList itemsList = line.split("\t");
+        if(itemsList.size() > CLASS_SIZE) qWarning() << itemsList;
+
+        int count = 0;
+        foreach(QString str, itemsList)
+        {
+            str.simplified();
+            if(!str.isEmpty())
+            {
+                dataInit(str, count);
+                ++count;
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief dataInit
+/// \param data
+/// \param index
+/// initialize data in class revision_files by index
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void revision_files::dataInit(const QString& data, const int index)
+{
+    if(data.isEmpty()) return;
+
+    switch (index)
+    {
+        case FILE_ACTION:
+        {
+            switch(data.at(0).toLatin1())
+            {
+            case 65:
+                fileAction_ = "Added";
+                break;
+            case 77:
+                fileAction_ = "Modified";
+                break;
+            case 68:
+                fileAction_ = "Deleted";
+                break;
+            default:
+                qWarning() << "undifined index! Class revision_files: method dataInit: " + data;
+            }
+        }
+            break;
+        case FILE_NAME:
+            fileName_ = data;
+            break;
+        default:
+            qCritical() << "Error! Undifined behavior in method dataInit, class revision_files: " + data;
+            //QMessageBox::critical(this, "Error", "Error! Undifined behavior in method dataInit, class revision_files: " + data);
+            break;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

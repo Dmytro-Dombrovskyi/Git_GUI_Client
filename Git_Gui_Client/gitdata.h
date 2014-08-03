@@ -6,10 +6,10 @@
 #include <QMessageBox>
 struct revision_files; // forward decl.
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief The GitData class
 ///  Class stored data from QProcess output (Database class)
-/// /////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class GitData : public QObject
 {
 public:
@@ -24,13 +24,7 @@ public:
     QString get_commitMessage() const {return commitMessage_;}
     QString get_date()          const {return date_;}
     QString get_datePeriod()    const {return datePeriod_;}
-    int get_size()              const {return SIZE;}
-
-    //QVector<revision_files*> get_revisionFiles()const {return revisionFiles_;}
-
-    //void set_revisionFiles(QString files);
-
-    //QVector<revision_files*> revisionFiles_;
+    int get_size()              const {return SIZE;}    
 
 protected:
     // set data methods
@@ -68,11 +62,12 @@ private:
            };
 };
 
-///////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
-/// class which contain data in Format: File - Action
+/// Class which contain data in Format: File - Action
 ///
-/// ///////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class revision_files : public QObject
 {
 private:
@@ -85,59 +80,8 @@ private:
 protected:
 
 public:
-    revision_files(QString line, QObject * parent = 0) : QObject(parent)
-    {
-        if(!line.isEmpty())
-        {
-            QStringList itemsList = line.split("\t");
-            if(itemsList.size() > 2) qWarning() << itemsList;
-
-            int count = 0;
-            foreach(QString str, itemsList)
-            {
-                str.simplified();
-                if(!str.isEmpty())
-                {
-                    dataInit(str, count);
-                    ++count;
-                }
-            }
-        }
-    }
-    void dataInit(const QString& data, const int index)
-    {
-        if(data.isEmpty()) return;
-
-        switch (index)
-        {
-            case FILE_ACTION:
-            {
-                switch(data.at(0).toLatin1())
-                {
-                case 65:
-                    fileAction_ = "Added";
-                    break;
-                case 77:
-                    fileAction_ = "Modified";
-                    break;
-                case 68:
-                    fileAction_ = "Deleted";
-                    break;
-                default:
-                    qWarning() << "undifined index! Class revision_files: method dataInit: " + data;
-                }
-            }
-                break;
-            case FILE_NAME:
-                fileName_ = data;
-                break;
-            default:
-                qCritical() << "Error! Undifined behavior in method dataInit, class revision_files: " + data;
-                //QMessageBox::critical(this, "Error", "Error! Undifined behavior in method dataInit, class revision_files: " + data);
-                break;
-        }
-    }
-
+    revision_files   (QString line, QObject * parent = 0);
+    void     dataInit(const QString& data, const int index);
     virtual ~revision_files() {}
 
     const QString get_fileAction()const  {return fileAction_;}
@@ -146,3 +90,5 @@ public:
 };
 
 #endif // GITDATA_H
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -48,18 +48,19 @@ protected:
                          const QString splitter_1 = "\n",
                          const QString splitter_2 = "::");
 private:
-    Ui::Gui_Main_Window   * ui;
-    QProcess              * Git;
-    My_Data_Model         * mainModel;
-    QVector<SecondDataModel *> secondModel;
-    QSortFilterProxyModel * FilterForTable_Model_1;
+    Ui::Gui_Main_Window    *  ui;
+    QProcess               *  Git;
+    My_Data_Model          *  mainModel;
+    QVector<SecondDataModel*> secondModel;
+    QSortFilterProxyModel  *  FilterForTable_Model_1;
 
 ///    QItemSelectionModel   * SelectionModel;
 ///    QMessageBox           * StatisticBox;
-
 
     QString                 workingDirectory_;
     QString                 programPath_;
 };
 
 #endif // GUI_MAIN_WINDOW_H
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
