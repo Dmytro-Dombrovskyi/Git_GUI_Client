@@ -51,7 +51,8 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
     connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)), FilterForTable_Model_1, SLOT(setFilterWildcard(QString)) );
 
-    //connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT (on_pushButton_Statistic_clicked()));
+    connect(ui->tableView_Files, SIGNAL(doubleClicked(QModelIndex)), this, SLOT (on_pushButton_Statistic_clicked()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
