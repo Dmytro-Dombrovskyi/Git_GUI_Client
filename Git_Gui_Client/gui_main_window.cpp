@@ -28,8 +28,7 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 
     Git = new QProcess(this);
     FilterForTable_Model_1 = new QSortFilterProxyModel;
-
-
+    browserChanges_ = new BrowserWithChanges(this);
 
     QPalette pal = ui->ExitButton->palette();
     pal.setBrush(QPalette::Button, QBrush(Qt::white, Qt::Dense3Pattern));
@@ -49,6 +48,7 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
     connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)), FilterForTable_Model_1, SLOT(setFilterWildcard(QString)) );
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(setNewModelFiles(QModelIndex)));
+    //connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,4 +296,23 @@ void Gui_Main_Window::setNewModelFiles(const QModelIndex & index)
         ui->tableView_Files->resizeRowsToContents();
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Gui_Main_Window::on_pushButton_Statistic_clicked
+/// Show statistic in new Browser
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Gui_Main_Window::on_pushButton_Statistic_clicked()
+{
+    QStringList command; // command for git
+    command << "log" << "--stat";
+
+    QString output = start_process(command);
+    command.clear();
+
+    if(!output.isEmpty())
+    {
+        emit browserChanges_->setBrowserChangesText(output);
+    }
+    browserChanges_->show();
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

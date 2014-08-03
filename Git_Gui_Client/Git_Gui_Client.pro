@@ -18,16 +18,19 @@ SOURCES += main.cpp\
     gui_main_window.cpp \
     gitdata.cpp \
     my_data_model.cpp \
-    seconddatamodel.cpp
+    seconddatamodel.cpp \
+    browserwithchanges.cpp
 
 HEADERS  += \
     gui_main_window.h \
     gitdata.h \
     my_data_model.h \
-    seconddatamodel.h
+    seconddatamodel.h \
+    browserwithchanges.h
 
 FORMS    += \
-    gui_main_window.ui
+    gui_main_window.ui \
+    browserwithchanges.ui
 
 RESOURCES += \
     Images.qrc

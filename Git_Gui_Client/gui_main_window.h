@@ -3,12 +3,16 @@
 
 #include <QtGui>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QDirModel>
 #include <QTreeView>
+
 #include "gitdata.h"
 #include "my_data_model.h"
 #include "seconddatamodel.h"
-#include <QMessageBox>
+#include "browserwithchanges.h"
+#include "ui_browserwithchanges.h"
+
 
 namespace Ui {
 class Gui_Main_Window;
@@ -32,7 +36,9 @@ private slots:
     void on_actionOpen_triggered ();
     void on_actionAbout_triggered();
 
-public slots:    
+    void on_pushButton_Statistic_clicked();
+
+public slots:
     void catchDataIndex  (const QModelIndex &);
     void setNewModelFiles(const QModelIndex &);
 
@@ -59,6 +65,8 @@ private:
 
     QString                 workingDirectory_;
     QString                 programPath_;
+
+    BrowserWithChanges     * browserChanges_;
 };
 
 #endif // GUI_MAIN_WINDOW_H
