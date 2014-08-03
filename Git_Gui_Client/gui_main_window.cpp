@@ -73,7 +73,9 @@ void Gui_Main_Window::DeleteSecondModel()
     for(size_t i = 0; i < size; ++i)
     {
         delete secondModel[i];
+        secondModel[i] = nullptr;
     }
+    secondModel.clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +150,10 @@ void Gui_Main_Window::start_programm()
           mainModel = new My_Data_Model(initialItemsForGitData_1, this);
 
           QStringList initDataForSeconModel;
+          if(!secondModel.isEmpty())
+          {
+              DeleteSecondModel();
+          }
           foreach(QString dataList, initialItemsForGitData_2)
           {
               initDataForSeconModel = dataList.split("\n");
