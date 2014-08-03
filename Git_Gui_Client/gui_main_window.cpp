@@ -42,12 +42,15 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 
     this->setPalette(pal);
 
-    connect(ui->tableView, SIGNAL(clicked(QModelIndex)),this, SLOT(catchDataIndex(QModelIndex)) );
-    connect(ui->tableView, SIGNAL(activated(QModelIndex)),this, SLOT(catchDataIndex(QModelIndex)) );
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)),this,  SLOT(catchDataIndex(QModelIndex)) );
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(setNewModelFiles(QModelIndex)));
+
     connect(this, SIGNAL(setDataFromIndex(QString)), ui->textBrowser, SLOT(setText(QString)) );
+    connect(this, SIGNAL(setDataInTable2(QModelIndex)), this, SLOT(setNewModelFiles(QModelIndex)));
+
     connect(ui->OpenButton, SIGNAL(clicked()), SLOT(on_actionOpen_triggered()) );
     connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)), FilterForTable_Model_1, SLOT(setFilterWildcard(QString)) );
-    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(setNewModelFiles(QModelIndex)));
+
     //connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
 }
 
@@ -60,7 +63,17 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
 Gui_Main_Window::~Gui_Main_Window()
 {
     Git->close();
+    DeleteSecondModel();
     delete ui;
+}
+
+void Gui_Main_Window::DeleteSecondModel()
+{
+    size_t size = secondModel.size();
+    for(size_t i = 0; i < size; ++i)
+    {
+        delete secondModel[i];
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,8 +154,11 @@ void Gui_Main_Window::start_programm()
               secondModel.append(new SecondDataModel(initDataForSeconModel, this));
               initDataForSeconModel.clear();
           }
-          update_TableView_1();
+          update_TableView_1();          
         }
+      data1.clear();
+      data2.clear();
+      command.clear();
     }
 }
 
@@ -221,6 +237,10 @@ void Gui_Main_Window::update_TableView_1()
   ui->tableView->setColumnHidden(2, true);
   ui->tableView->setColumnHidden(5, true);
   ui->tableView->setColumnHidden(7, true);
+
+  emit this->setDataInTable2(FilterForTable_Model_1->index(0,0));
+  emit this->setDataFromIndex(FilterForTable_Model_1->index(0, 0).data().toString());
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -249,7 +269,7 @@ void Gui_Main_Window::on_actionAbout_triggered()
     aboutBox.exec();
 }
 
-// Slot for setting text
+// Slot for setting text in TextBrowser
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief Gui_Main_Window::catchDataIndex
 /// \param index
@@ -289,8 +309,7 @@ void Gui_Main_Window::catchDataIndex(const QModelIndex & index)
 void Gui_Main_Window::setNewModelFiles(const QModelIndex & index)
 {
     if(index.isValid())
-    {
-        // set Table View 2
+    {        
         ui->tableView_Files->setModel(secondModel.at(index.row()));
         ui->tableView_Files->resizeColumnToContents(0);
         ui->tableView_Files->resizeRowsToContents();
@@ -304,15 +323,15 @@ void Gui_Main_Window::setNewModelFiles(const QModelIndex & index)
 void Gui_Main_Window::on_pushButton_Statistic_clicked()
 {
     QStringList command; // command for git
-    command << "log" << "--stat";
+        command << "log" << "--stat";
 
-    QString output = start_process(command);
-    command.clear();
+        QString output = start_process(command);
+        command.clear();
 
-    if(!output.isEmpty())
-    {
-        emit browserChanges_->setBrowserChangesText(output);
-    }
-    browserChanges_->show();
+        if(!output.isEmpty())
+        {
+            emit browserChanges_->setBrowserChangesText(output);
+        }
+        browserChanges_->show();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

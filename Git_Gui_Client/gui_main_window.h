@@ -27,9 +27,11 @@ class Gui_Main_Window : public QMainWindow
 public:
     explicit Gui_Main_Window(QWidget *parent = 0);
     ~Gui_Main_Window();
+    void DeleteSecondModel();
 
 signals:
     void setDataFromIndex(const QString &);
+    void setDataInTable2(const QModelIndex &);
 
 private slots:
     void on_actionExit_triggered ();
