@@ -52,7 +52,7 @@ Gui_Main_Window::Gui_Main_Window(QWidget *parent) :
     connect(ui->lineEdit_FilterPeriod, SIGNAL(textChanged(QString)), FilterForTable_Model_1, SLOT(setFilterWildcard(QString)) );
 
     connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT (on_pushButton_Statistic_clicked()));
-    connect(ui->tableView_Files, SIGNAL(doubleClicked(QModelIndex)), this, SLOT (on_pushButton_Statistic_clicked()));
+    connect(ui->tableView_Files, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(getDifferenceInFileName(QModelIndex)));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -342,3 +342,23 @@ void Gui_Main_Window::on_pushButton_Statistic_clicked()
         browserChanges_->show();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Show statistic in current file (Table 2)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Gui_Main_Window::getDifferenceInFileName(const QModelIndex & index, int role)
+{
+  if(index.isValid() && role == Qt::DisplayRole)
+    {
+      QString findInFileName = index.data().toString();
+
+      QStringList command;
+      command << "blame" << "--show-stats" << findInFileName;
+      QString output = start_process(command);
+      command.clear();
+
+      if(!output.isEmpty())
+        {
+          emit browserChanges_->setBrowserChangesText(output);
+        }
+      browserChanges_->show();
+    }
+}

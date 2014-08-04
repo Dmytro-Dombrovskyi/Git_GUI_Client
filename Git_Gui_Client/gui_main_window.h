@@ -44,6 +44,8 @@ public slots:
     void catchDataIndex  (const QModelIndex &);
     void setNewModelFiles(const QModelIndex &);
 
+    void getDifferenceInFileName(const QModelIndex &, int role = Qt::DisplayRole);
+
 protected:
     void                 set_programPath     (); // set default programm execution file(git.exe for windows or "git" for linux)
     bool                 set_workingDirectory();
